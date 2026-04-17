@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none">
+  <!-- Sleeve Festif — placeholder -->
+  <rect width="240" height="320" rx="12" fill="#ffe3e3"/>
+  <!-- Envelope shape -->
+  <rect x="32" y="80" width="176" height="160" rx="8" fill="#ff6b6b" opacity="0.2"/>
+  <rect x="32" y="80" width="176" height="160" rx="8" stroke="#ff6b6b" stroke-width="2"/>
+  <!-- Flap -->
+  <path d="M32 80 L120 152 L208 80" stroke="#ff6b6b" stroke-width="2" fill="none"/>
+  <!-- Confetti dots -->
+  <circle cx="60" cy="48" r="5" fill="#ff6b6b" opacity="0.6"/>
+  <circle cx="90" cy="32" r="4" fill="#d63031" opacity="0.5"/>
+  <circle cx="160" cy="44" r="6" fill="#ff6b6b" opacity="0.4"/>
+  <circle cx="190" cy="28" r="4" fill="#d63031" opacity="0.6"/>
+  <circle cx="120" cy="20" r="5" fill="#ff6b6b" opacity="0.5"/>
+  <!-- Label -->
+  <rect x="56" y="264" width="128" height="32" rx="6" fill="#ff6b6b" opacity="0.15"/>
+  <text x="120" y="285" text-anchor="middle" fill="#d63031" font-family="Space Mono, monospace" font-size="11" font-weight="700" letter-spacing="1">SLEEVE FESTIF</text>
+</svg>

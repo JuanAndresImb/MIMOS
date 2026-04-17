@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" fill="none">
+  <!-- Hero placeholder — boîte aux lettres avec brownie box -->
+  <rect width="640" height="480" fill="#fff5f5"/>
+
+  <!-- Boîte aux lettres post -->
+  <rect x="220" y="120" width="200" height="140" rx="10" fill="#ffe3e3" stroke="#ff6b6b" stroke-width="3"/>
+  <rect x="220" y="120" width="200" height="55" rx="10" fill="#ff6b6b" opacity="0.3"/>
+  <!-- Fente -->
+  <rect x="270" y="148" width="100" height="8" rx="4" fill="#d63031" opacity="0.4"/>
+
+  <!-- Post pied -->
+  <rect x="304" y="260" width="32" height="80" rx="4" fill="#ff6b6b" opacity="0.4"/>
+  <rect x="260" y="335" width="120" height="12" rx="6" fill="#ff6b6b" opacity="0.3"/>
+
+  <!-- Brownie box qui sort de la boîte -->
+  <rect x="255" y="92" width="130" height="100" rx="8" fill="white" stroke="#ff6b6b" stroke-width="2"/>
+  <!-- Ribbon -->
+  <line x1="320" y1="92" x2="320" y2="192" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="4 2"/>
+  <line x1="255" y1="142" x2="385" y2="142" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="4 2"/>
+  <!-- Nœud -->
+  <circle cx="320" cy="88" r="10" fill="#ff6b6b" opacity="0.6"/>
+
+  <!-- Étoiles / confettis décoratifs -->
+  <circle cx="160" cy="160" r="8" fill="#fdcb6e" opacity="0.5"/>
+  <circle cx="480" cy="200" r="10" fill="#00b894" opacity="0.4"/>
+  <circle cx="140" cy="280" r="6" fill="#ff6b6b" opacity="0.4"/>
+  <circle cx="500" cy="140" r="7" fill="#fdcb6e" opacity="0.5"/>
+  <circle cx="440" cy="320" r="8" fill="#ff6b6b" opacity="0.3"/>
+  <circle cx="200" cy="350" r="5" fill="#00b894" opacity="0.4"/>
+
+  <!-- Stars -->
+  <text x="150" y="175" font-size="20" fill="#ff6b6b" opacity="0.5">✦</text>
+  <text x="470" y="155" font-size="16" fill="#fdcb6e" opacity="0.6">✦</text>
+  <text x="490" y="310" font-size="14" fill="#00b894" opacity="0.5">✦</text>
+
+  <!-- Texte placeholder -->
+  <text x="320" y="415" text-anchor="middle" fill="#d63031" font-family="Georgia, serif" font-size="13" opacity="0.6">Photo hero à venir — shooting produit sleeve</text>
+</svg>

@@ -1,0 +1,93 @@
+# generated: 2026-04-15
+# last_updated: 2026-04-15
+# project: La Brownie Box Belge
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: /Users/juanandres/brownie-box-belge
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+generated: "2026-04-15"
+last_updated: "2026-04-15"
+project: "La Brownie Box Belge"
+project_key: NOKEY
+tracking_system: file-system
+story_location: /Users/juanandres/brownie-box-belge
+
+development_status:
+
+  # ── Epic 1 : Fondations & Infrastructure ──────────────────────────────────
+  epic-1: done
+  1-1-initialisation-du-projet-nextjs: done
+  1-2-schema-bdd-initial-migrations-supabase-cli: done
+  1-3-design-tokens-figma-en-css-custom-properties: done
+  1-4-architecture-i18n-next-intl-fr-active: done
+  1-5-authentification-admin-route-grouping: done
+  1-6-monitoring-sentry-ci-vercel: done
+  epic-1-retrospective: optional
+
+  # ── Epic 2 : Catalogue & Navigation par occasion ──────────────────────────
+  epic-2: done
+  2-1-occasions-ts-pages-occasion-isr: done
+  2-2-navbar-futura-studio-dropdown-sleeve-preview: done
+  2-3-page-daccueil-hero-sections-principales: done
+  2-4-page-fiche-produit-avec-allergenes: done
+  epic-2-retrospective: optional
+
+  # ── Epic 3 : Tunnel d'achat B2C & Paiement ────────────────────────────────
+  epic-3: done
+  3-1-zustand-store-tunnel-etape-selection-occasion: done
+  3-2-editeur-de-message-previsualisation-sleeve: done
+  3-3-formulaire-adresse-de-livraison: done
+  3-4-paiement-mollie-confirmation-commande: done
+  3-5-systeme-codes-promo-validation-tunnel: done
+  epic-3-retrospective: optional
+
+  # ── Epic 4 : Page Expérience Destinataire ─────────────────────────────────
+  epic-4: in-progress
+  4-1-generation-token-page-destinataire-par-commande: review
+  4-2-affichage-page-destinataire-experience-de-marque: review
+  4-3-cta-conversion-code-promo-destinataire: review
+  4-4-anonymisation-rgpd-cron-supabase: review
+  epic-4-retrospective: optional
+
+  # ── Epic 5 : Notifications & Compte client ────────────────────────────────
+  epic-5: backlog
+  5-1-webhook-bpost-notification-expedition: backlog
+  5-2-creation-compte-client-post-achat: backlog
+  5-3-espace-client-historique-adresses: backlog
+  epic-5-retrospective: optional
+
+  # ── Epic 6 : Parcours B2B & Facturation ───────────────────────────────────
+  epic-6: backlog
+  6-1-formulaire-de-commande-b2b: backlog
+  6-2-paiement-virement-sepa-confirmation-b2b: backlog
+  6-3-generation-automatique-facture-pdf-supabase-edge-function: backlog
+  epic-6-retrospective: optional
+
+  # ── Epic 7 : Dashboard Admin ──────────────────────────────────────────────
+  epic-7: in-progress
+  7-1-authentification-admin-protection-des-routes: done
+  7-2-gestion-des-commandes-changement-de-statut: done
+  7-3-gestion-des-produits-stocks: done
+  7-4-gestion-des-codes-promo: done
+  7-5-gestion-rgpd-anonymisation: backlog
+  7-6-tableau-de-bord-metriques-operationnelles: done
+  7-7-parametres-admin-canal-de-notification: review
+  epic-7-retrospective: optional
