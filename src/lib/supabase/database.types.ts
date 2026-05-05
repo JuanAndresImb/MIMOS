@@ -57,34 +57,34 @@ export type Database = {
       }
       customers: {
         Row: {
-          created_at:        string
-          email:             string
-          first_name:        string | null
-          id:                string
-          last_name:         string | null
+          created_at: string
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
           marketing_consent: boolean
-          updated_at:        string
-          user_id:           string | null
+          updated_at: string
+          user_id: string | null
         }
         Insert: {
-          created_at?:        string
-          email:              string
-          first_name?:        string | null
-          id?:                string
-          last_name?:         string | null
+          created_at?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
           marketing_consent?: boolean
-          updated_at?:        string
-          user_id?:           string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Update: {
-          created_at?:        string
-          email?:             string
-          first_name?:        string | null
-          id?:                string
-          last_name?:         string | null
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
           marketing_consent?: boolean
-          updated_at?:        string
-          user_id?:           string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -139,7 +139,9 @@ export type Database = {
           discount_cents: number
           id: string
           idempotency_key: string
+          invoice_number: string | null
           invoice_sent_at: string | null
+          invoice_url: string | null
           is_b2b: boolean
           mollie_payment_id: string | null
           occasion_slug: string | null
@@ -160,7 +162,9 @@ export type Database = {
           discount_cents?: number
           id?: string
           idempotency_key: string
+          invoice_number?: string | null
           invoice_sent_at?: string | null
+          invoice_url?: string | null
           is_b2b?: boolean
           mollie_payment_id?: string | null
           occasion_slug?: string | null
@@ -181,7 +185,9 @@ export type Database = {
           discount_cents?: number
           id?: string
           idempotency_key?: string
+          invoice_number?: string | null
           invoice_sent_at?: string | null
+          invoice_url?: string | null
           is_b2b?: boolean
           mollie_payment_id?: string | null
           occasion_slug?: string | null
@@ -353,22 +359,23 @@ export type Database = {
     Functions: {
       create_order_atomic: {
         Args: {
-          p_idempotency_key:   string
-          p_email:             string
-          p_first_name:        string
-          p_last_name:         string
-          p_product_id:        string
-          p_occasion_slug:     string
+          p_delivery_address: Json
+          p_discount_cents: number
+          p_email: string
+          p_first_name: string
+          p_idempotency_key: string
+          p_last_name: string
+          p_occasion_slug: string
+          p_product_id: string
+          p_promo_code_id: string
           p_recipient_message: string
-          p_sender_name:       string
-          p_delivery_address:  Json
-          p_promo_code_id:     string | null
-          p_discount_cents:    number
-          p_unit_price_cents:  number
-          p_total_cents:       number
+          p_sender_name: string
+          p_total_cents: number
+          p_unit_price_cents: number
         }
         Returns: string
       }
+      next_invoice_number: { Args: never; Returns: number }
     }
     Enums: {
       [_ in never]: never
@@ -504,4 +511,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-

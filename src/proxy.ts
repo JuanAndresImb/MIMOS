@@ -1,10 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { routing } from "./i18n/routing";
+
+const VALID_LOCALES = routing.locales as readonly string[];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Helper : crée un client Supabase SSR pour le middleware
   function makeSupabaseClient(response: NextResponse) {
     return createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,7 +25,19 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  // Routes espace client — vérification de la session
+  // Admin auth
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+    const response = NextResponse.next({ request: { headers: request.headers } });
+    const { data: { user } } = await makeSupabaseClient(response).auth.getUser();
+    if (!user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/admin/login";
+      return NextResponse.redirect(loginUrl);
+    }
+    return response;
+  }
+
+  // Compte auth
   if (pathname.startsWith("/compte") && pathname !== "/compte/connexion") {
     const response = NextResponse.next({ request: { headers: request.headers } });
     const { data: { user } } = await makeSupabaseClient(response).auth.getUser();
@@ -35,26 +49,15 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Routes admin — vérification de la session Supabase
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
-    const response = NextResponse.next({ request: { headers: request.headers } });
-    const { data: { user } } = await makeSupabaseClient(response).auth.getUser();
+  // Locale via cookie — injecte x-next-intl-locale pour getRequestConfig
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  const locale = VALID_LOCALES.includes(cookieLocale ?? "") ? cookieLocale! : routing.defaultLocale;
 
-    if (!user) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/admin/login";
-      return NextResponse.redirect(loginUrl);
-    }
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-next-intl-locale", locale);
 
-    return response;
-  }
-
-  // Routes publiques — locale unique 'fr', pas de préfixe URL
-  // createIntlMiddleware n'est pas utilisé : il est conçu pour les setups multi-langues
-  // et cause des rewrites inattendus avec localePrefix: "never" + locale unique.
-  // next-intl lit la locale depuis getRequestConfig (fallback → 'fr').
   return NextResponse.next({
-    request: { headers: request.headers },
+    request: { headers: requestHeaders },
   });
 }
 

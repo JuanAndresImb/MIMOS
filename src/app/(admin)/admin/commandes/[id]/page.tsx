@@ -7,20 +7,24 @@ import OrderStatusForm from "./OrderStatusForm";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "En attente",
+  pending_payment: "Attente virement",
   paid: "Payée",
   preparing: "En préparation",
   shipped: "Expédiée",
   delivered: "Livrée",
   cancelled: "Annulée",
+  expired_payment: "Virement expiré",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "var(--warning)",
+  pending_payment: "var(--warning)",
   paid: "var(--success)",
   preparing: "var(--primary-500)",
   shipped: "var(--primary-700)",
   delivered: "var(--success)",
   cancelled: "var(--error)",
+  expired_payment: "var(--error)",
 };
 
 interface Props {
@@ -46,6 +50,11 @@ export default async function OrderDetailPage({ params }: Props) {
       delivery_address,
       mollie_payment_id,
       tracking_number,
+      is_b2b,
+      company_name,
+      vat_number,
+      invoice_number,
+      invoice_sent_at,
       created_at,
       updated_at,
       customers (email, first_name, last_name),
@@ -245,6 +254,48 @@ export default async function OrderDetailPage({ params }: Props) {
               >
                 Voir le suivi →
               </a>
+            </div>
+          )}
+
+          {/* Facture B2B */}
+          {order.is_b2b && (
+            <div
+              className="rounded-2xl p-5"
+              style={{ backgroundColor: "white", border: "1px solid var(--primary-100)" }}
+            >
+              <h2 className="text-sm font-bold mb-3" style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
+                Facture B2B
+              </h2>
+              {order.company_name && (
+                <p className="text-sm mb-1" style={{ fontFamily: "var(--font-body)", color: "var(--text-primary)" }}>
+                  {order.company_name}
+                </p>
+              )}
+              {order.vat_number && (
+                <p className="text-xs mb-3" style={{ fontFamily: "var(--font-label)", color: "var(--text-secondary)" }}>
+                  TVA : {order.vat_number}
+                </p>
+              )}
+              {order.invoice_number ? (
+                <>
+                  <p className="text-xs font-mono mb-3" style={{ color: "var(--success)" }}>
+                    {order.invoice_number}
+                  </p>
+                  <a
+                    href={`/api/admin/invoices/${order.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-opacity hover:opacity-80"
+                    style={{ backgroundColor: "var(--primary-50)", color: "var(--primary-700)", fontFamily: "var(--font-body)" }}
+                  >
+                    Télécharger PDF →
+                  </a>
+                </>
+              ) : (
+                <p className="text-xs" style={{ color: "var(--text-secondary)", fontFamily: "var(--font-body)" }}>
+                  En attente de génération
+                </p>
+              )}
             </div>
           )}
 

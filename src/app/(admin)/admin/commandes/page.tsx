@@ -5,20 +5,24 @@ import { formatPriceCents } from "@/lib/utils";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "En attente",
+  pending_payment: "Attente virement",
   paid: "Payée",
   preparing: "Préparation",
   shipped: "Expédiée",
   delivered: "Livrée",
   cancelled: "Annulée",
+  expired_payment: "Virement expiré",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "var(--warning)",
+  pending_payment: "var(--warning)",
   paid: "var(--success)",
   preparing: "var(--primary-500)",
   shipped: "var(--primary-700)",
   delivered: "var(--success)",
   cancelled: "var(--error)",
+  expired_payment: "var(--error)",
 };
 
 interface Props {
@@ -53,11 +57,13 @@ export default async function CommandesPage({ searchParams }: Props) {
   const filters = [
     { value: "all", label: "Toutes" },
     { value: "pending", label: "En attente" },
+    { value: "pending_payment", label: "Attente virement" },
     { value: "paid", label: "Payées" },
     { value: "preparing", label: "Préparation" },
     { value: "shipped", label: "Expédiées" },
     { value: "delivered", label: "Livrées" },
     { value: "cancelled", label: "Annulées" },
+    { value: "expired_payment", label: "Virement expiré" },
   ];
 
   return (

@@ -123,7 +123,7 @@ export default function CreateAccountForm({ email }: { email: string }) {
             className="text-xs leading-relaxed"
             style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
           >
-            J&apos;accepte de recevoir des offres et actualités de La Brownie Box Belge par email.
+            J&apos;accepte de recevoir des offres et actualités de MIMOS par email.
             Je peux me désabonner à tout moment.
           </span>
         </label>

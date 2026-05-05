@@ -28,6 +28,10 @@ const createOrderSchema = z.object({
   email:            z.string().email(),
   deliveryAddress:  deliveryAddressSchema,
   promoCode:        z.string().max(50).optional(),
+  isB2b:            z.boolean().optional(),
+  companyName:      z.string().max(200).optional(),
+  vatNumber:        z.string().max(50).optional(),
+  paymentMethod:    z.enum(["standard", "banktransfer"]).optional(),
 });
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
@@ -133,20 +137,57 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
 
   const orderId = result.orderId;
 
-  // 5. Créer le paiement Mollie et rediriger vers le checkout
+  const isBanktransfer = data.paymentMethod === "banktransfer" && data.isB2b;
+
+  // 5. Persister les champs B2B si applicable
+  if (data.isB2b) {
+    await supabase
+      .from("orders")
+      .update({
+        is_b2b:       true,
+        company_name: data.companyName ?? null,
+        vat_number:   data.vatNumber   ?? null,
+        // Statut spécifique virement : en attente de réception
+        ...(isBanktransfer ? { status: "pending_payment" } : {}),
+      })
+      .eq("id", orderId);
+  }
+
+  // 6. Créer le paiement Mollie et rediriger
   const baseUrl = getBaseUrl();
   const mollie  = getMollieClient();
   const euros   = (totalCents / 100).toFixed(2);
 
-  // Cast explicite : l'overload callback de Mollie brouille l'inférence TypeScript
   type MolliePayment = { id: string; getCheckoutUrl(): string | null };
+
+  if (isBanktransfer) {
+    // Virement SEPA — Mollie crée le payment et retourne les coordonnées bancaires
+    const payment = (await mollie.payments.create({
+      amount:      { currency: "EUR", value: euros },
+      description: `MIMOS — commande ${orderId.slice(0, 8).toUpperCase()}`,
+      redirectUrl: `${baseUrl}/confirmation-b2b?order=${orderId}`,
+      webhookUrl:  `${baseUrl}/api/webhooks/mollie`,
+      locale:      Locale.fr_BE,
+      method:      PaymentMethod.banktransfer,
+      metadata:    { orderId },
+    })) as unknown as MolliePayment;
+
+    await supabase
+      .from("orders")
+      .update({ mollie_payment_id: payment.id })
+      .eq("id", orderId);
+
+    redirect(`/confirmation-b2b?order=${orderId}`);
+  }
+
+  // Paiement standard (Bancontact / carte)
   const payment = (await mollie.payments.create({
     amount:      { currency: "EUR", value: euros },
-    description: `Brownie Box Belge — commande ${orderId.slice(0, 8).toUpperCase()}`,
+    description: `MIMOS — commande ${orderId.slice(0, 8).toUpperCase()}`,
     redirectUrl: `${baseUrl}/confirmation?order=${orderId}`,
     webhookUrl:  `${baseUrl}/api/webhooks/mollie`,
     locale:      Locale.fr_BE,
-    method:      [PaymentMethod.bancontact, PaymentMethod.creditcard, PaymentMethod.ideal, PaymentMethod.banktransfer],
+    method:      [PaymentMethod.bancontact, PaymentMethod.creditcard, PaymentMethod.ideal],
     metadata:    { orderId },
   })) as unknown as MolliePayment;
 

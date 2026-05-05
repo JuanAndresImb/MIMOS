@@ -133,3 +133,77 @@ export async function logoutCustomer(): Promise<void> {
   revalidatePath("/", "layout");
   redirect("/");
 }
+
+// ─── Suppression compte (droit à l'effacement RGPD) ──────────────────────────
+
+export async function deleteMyAccount(): Promise<void> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/compte/connexion");
+
+  const admin = createAdminClient();
+
+  // Récupérer le customer lié
+  const { data: customer } = await admin
+    .from("customers")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (customer) {
+    // Récupérer les commandes pour anonymiser les données liées
+    const { data: orders } = await admin
+      .from("orders")
+      .select("id")
+      .eq("customer_id", customer.id);
+
+    if (orders && orders.length > 0) {
+      const orderIds = orders.map((o) => o.id);
+
+      // Anonymiser recipient_pages
+      await admin
+        .from("recipient_pages")
+        .update({
+          sender_name: "[supprimé]",
+          message: "[supprimé]",
+          recipient_first_name: null,
+          anonymized_at: new Date().toISOString(),
+        })
+        .in("order_id", orderIds)
+        .is("anonymized_at", null);
+
+      // Anonymiser les adresses et messages dans les commandes
+      for (const orderId of orderIds) {
+        await admin
+          .from("orders")
+          .update({
+            delivery_address: { anonymized: true },
+            sender_name: null,
+            recipient_message: null,
+          })
+          .eq("id", orderId);
+      }
+    }
+
+    // Anonymiser le customer (conserver la ligne pour les agrégats financiers)
+    await admin
+      .from("customers")
+      .update({
+        first_name: null,
+        last_name: null,
+        email: `[supprimé-${customer.id.slice(0, 8)}]`,
+        marketing_consent: false,
+        user_id: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", customer.id);
+  }
+
+  // Supprimer le compte Supabase Auth
+  await admin.auth.admin.deleteUser(user.id);
+
+  // Invalider la session et rediriger
+  await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+  redirect("/");
+}

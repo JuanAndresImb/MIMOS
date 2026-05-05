@@ -6,6 +6,8 @@ const NAV_ITEMS = [
   { href: "/admin/commandes", label: "Commandes", icon: "📦" },
   { href: "/admin/produits", label: "Produits", icon: "🍫" },
   { href: "/admin/codes-promo", label: "Codes promo", icon: "🎟️" },
+  { href: "/admin/factures", label: "Factures", icon: "🧾" },
+  { href: "/admin/rgpd", label: "RGPD", icon: "🔒" },
   { href: "/admin/parametres", label: "Paramètres", icon: "⚙️" },
 ];
 

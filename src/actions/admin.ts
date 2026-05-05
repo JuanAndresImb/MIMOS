@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireAdmin } from "@/lib/auth";
@@ -178,10 +179,127 @@ export async function togglePromoCode(
   return null;
 }
 
+export async function createProduct(
+  _prevState: string | null,
+  formData: FormData
+): Promise<string | null> {
+  await requireAdmin();
+
+  const name = (formData.get("name") as string)?.trim();
+  const description = (formData.get("description") as string)?.trim() || null;
+  const priceEuros = parseFloat(formData.get("priceEuros") as string);
+  const occasionSlugs = formData.getAll("occasions") as string[];
+  const allergensList = formData.getAll("allergens") as string[];
+  const stock = parseInt(formData.get("stock") as string, 10);
+  const alertThreshold = parseInt(formData.get("alertThreshold") as string, 10);
+  const imageUrls = formData.getAll("imageUrls").filter((u) => typeof u === "string" && u.startsWith("http")) as string[];
+
+  if (!name || name.length > 255) return "Nom invalide";
+  if (isNaN(priceEuros) || priceEuros <= 0) return "Prix invalide";
+  if (occasionSlugs.length === 0) return "Sélectionnez au moins une occasion";
+  if (isNaN(stock) || stock < 0) return "Stock invalide";
+  if (isNaN(alertThreshold) || alertThreshold < 0) return "Seuil d'alerte invalide";
+
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("products").insert({
+    name,
+    description,
+    price_cents: Math.round(priceEuros * 100),
+    occasion_slugs: occasionSlugs,
+    allergens: allergensList,
+    stock,
+    stock_alert_threshold: alertThreshold,
+    images: imageUrls,
+    is_active: true,
+  });
+
+  if (error) return "Erreur lors de la création";
+
+  revalidatePath("/admin/produits");
+  redirect("/admin/produits");
+}
+
+export async function updateProduct(
+  _prevState: string | null,
+  formData: FormData
+): Promise<string | null> {
+  await requireAdmin();
+
+  const productId = formData.get("productId") as string;
+  if (!productId) return "Données invalides";
+
+  const name = (formData.get("name") as string)?.trim();
+  const description = (formData.get("description") as string)?.trim() || null;
+  const priceEuros = parseFloat(formData.get("priceEuros") as string);
+  const occasionSlugs = formData.getAll("occasions") as string[];
+  const allergensList = formData.getAll("allergens") as string[];
+  const stock = parseInt(formData.get("stock") as string, 10);
+  const alertThreshold = parseInt(formData.get("alertThreshold") as string, 10);
+  const imageUrls = formData.getAll("imageUrls").filter((u) => typeof u === "string" && u.startsWith("http")) as string[];
+
+  if (!name || name.length > 255) return "Nom invalide";
+  if (isNaN(priceEuros) || priceEuros <= 0) return "Prix invalide";
+  if (occasionSlugs.length === 0) return "Sélectionnez au moins une occasion";
+  if (isNaN(stock) || stock < 0) return "Stock invalide";
+  if (isNaN(alertThreshold) || alertThreshold < 0) return "Seuil d'alerte invalide";
+
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("products")
+    .update({
+      name,
+      description,
+      price_cents: Math.round(priceEuros * 100),
+      occasion_slugs: occasionSlugs,
+      allergens: allergensList,
+      stock,
+      stock_alert_threshold: alertThreshold,
+      images: imageUrls,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", productId);
+
+  if (error) return "Erreur lors de la mise à jour";
+
+  revalidatePath("/admin/produits");
+  redirect("/admin/produits");
+}
+
+export async function deleteProduct(
+  _prevState: string | null,
+  formData: FormData
+): Promise<string | null> {
+  await requireAdmin();
+
+  const productId = formData.get("productId") as string;
+  if (!productId) return "Données invalides";
+
+  const supabase = createAdminClient();
+
+  // Vérifie s'il y a des commandes liées — soft delete si oui, hard delete sinon
+  const { count } = await supabase
+    .from("order_items")
+    .select("id", { count: "exact", head: true })
+    .eq("product_id", productId);
+
+  if (count && count > 0) {
+    const { error } = await supabase
+      .from("products")
+      .update({ is_active: false, updated_at: new Date().toISOString() })
+      .eq("id", productId);
+    if (error) return "Erreur lors de la désactivation";
+  } else {
+    const { error } = await supabase.from("products").delete().eq("id", productId);
+    if (error) return "Erreur lors de la suppression";
+  }
+
+  revalidatePath("/admin/produits");
+  redirect("/admin/produits");
+}
+
 // ─── Paramètres — webhook notifications ───────────────────────────────────────
 
 const VALID_EVENTS = ["new_order", "low_stock", "invoice_error", "wire_payment_received"] as const;
-type WebhookEvent = typeof VALID_EVENTS[number];
 
 export async function saveWebhookSettings(
   _prevState: string | null,
@@ -230,7 +348,7 @@ export async function testWebhookConnection(
   const payload = {
     type: "test",
     timestamp: new Date().toISOString(),
-    data: { message: "Test de connexion depuis La Brownie Box Belge" },
+    data: { message: "Test de connexion depuis MIMOS" },
   };
 
   try {
@@ -248,6 +366,109 @@ export async function testWebhookConnection(
     const msg = err instanceof Error ? err.message : "Erreur réseau";
     return { ok: false, message: `❌ Échec — ${msg}` };
   }
+}
+
+// ─── RGPD ─────────────────────────────────────────────────────────────────────
+
+export async function anonymizeUserByEmail(
+  _prevState: string | null,
+  formData: FormData
+): Promise<string | null> {
+  await requireAdmin();
+
+  const email = (formData.get("email") as string)?.trim().toLowerCase();
+  if (!email || !email.includes("@")) return "Email invalide";
+
+  const supabase = createAdminClient();
+
+  // Trouver le customer
+  const { data: customer } = await supabase
+    .from("customers")
+    .select("id")
+    .eq("email", email)
+    .maybeSingle();
+
+  if (!customer) return "Aucun client trouvé avec cet email";
+
+  // Anonymiser les recipient_pages liées aux commandes de ce customer
+  const { data: orders } = await supabase
+    .from("orders")
+    .select("id")
+    .eq("customer_id", customer.id);
+
+  if (orders && orders.length > 0) {
+    const orderIds = orders.map((o) => o.id);
+    await supabase
+      .from("recipient_pages")
+      .update({
+        sender_name: "[supprimé]",
+        message: "[supprimé]",
+        recipient_first_name: null,
+        anonymized_at: new Date().toISOString(),
+      })
+      .in("order_id", orderIds)
+      .is("anonymized_at", null);
+  }
+
+  // Anonymiser les données personnelles du customer
+  await supabase
+    .from("customers")
+    .update({
+      first_name: null,
+      last_name: null,
+      email: `[supprimé-${customer.id.slice(0, 8)}]`,
+      marketing_consent: false,
+    })
+    .eq("id", customer.id);
+
+  // Anonymiser les adresses de livraison dans les commandes
+  if (orders && orders.length > 0) {
+    const orderIds = orders.map((o) => o.id);
+    for (const orderId of orderIds) {
+      await supabase
+        .from("orders")
+        .update({
+          delivery_address: { anonymized: true },
+          sender_name: null,
+          recipient_message: null,
+        })
+        .eq("id", orderId);
+    }
+  }
+
+  revalidatePath("/admin/rgpd");
+  return null;
+}
+
+export async function getRgpdStats() {
+  await requireAdmin();
+  const supabase = createAdminClient();
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const [activeRes, anonymizedRecentRes, totalAnonymizedRes] = await Promise.all([
+    supabase
+      .from("recipient_pages")
+      .select("id", { count: "exact", head: true })
+      .is("anonymized_at", null)
+      .gt("expires_at", new Date().toISOString()),
+    supabase
+      .from("recipient_pages")
+      .select("id", { count: "exact", head: true })
+      .not("anonymized_at", "is", null)
+      .gte("anonymized_at", thirtyDaysAgo.toISOString()),
+    supabase
+      .from("recipient_pages")
+      .select("id", { count: "exact", head: true })
+      .not("anonymized_at", "is", null),
+  ]);
+
+  return {
+    activePages: activeRes.count ?? 0,
+    anonymizedRecent: anonymizedRecentRes.count ?? 0,
+    totalAnonymized: totalAnonymizedRes.count ?? 0,
+  };
 }
 
 export async function getWebhookSettings() {

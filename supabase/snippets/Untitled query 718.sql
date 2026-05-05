@@ -1,0 +1,1 @@
+INSERT INTO storage.buckets (id, name, public, file_size_limit) VALUES ('invoices', 'invoices', false, 5242880) ON CONFLICT (id) DO NOTHING;

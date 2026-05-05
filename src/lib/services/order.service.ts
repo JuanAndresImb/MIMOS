@@ -52,7 +52,7 @@ export async function createOrderAtomic(
     p_recipient_message: params.recipientMessage,
     p_sender_name:       params.senderName,
     p_delivery_address:  params.deliveryAddress,
-    p_promo_code_id:     params.promoCodeId,
+    p_promo_code_id:     params.promoCodeId as string,
     p_discount_cents:    params.discountCents,
     p_unit_price_cents:  params.unitPriceCents,
     p_total_cents:       params.totalCents,

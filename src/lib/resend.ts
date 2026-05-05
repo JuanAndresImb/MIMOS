@@ -10,7 +10,7 @@ export function getResendClient() {
 
 /**
  * Adresse expéditeur.
- * TODO (prod) : remplacer par "La Brownie Box Belge <bonjour@brownieboxbelge.be>"
- * une fois le domaine brownieboxbelge.be vérifié dans Resend.
+ * TODO (prod) : remplacer par "MIMOS <bonjour@mimos.be>"
+ * une fois le domaine mimos.be vérifié dans Resend.
  */
-export const FROM_EMAIL = "La Brownie Box Belge <onboarding@resend.dev>";
+export const FROM_EMAIL = "MIMOS <onboarding@resend.dev>";

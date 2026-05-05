@@ -6,9 +6,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { logoutCustomer } from "@/actions/auth";
 import { formatPriceCents } from "@/lib/utils";
 import { getOccasion } from "@/data/occasions";
+import DeleteAccountForm from "./DeleteAccountForm";
 
 export const metadata: Metadata = {
-  title: "Mon compte — La Brownie Box Belge",
+  title: "Mon compte — MIMOS",
   robots: { index: false, follow: false },
 };
 
@@ -196,6 +197,38 @@ export default async function ComptePage() {
         )}
 
       </div>
+
+      {/* Données personnelles — RGPD */}
+      <div
+        className="mt-10 pt-8"
+        style={{ borderTop: "1px solid var(--primary-100)" }}
+      >
+        <h2
+          className="text-xs uppercase tracking-widest mb-4"
+          style={{ fontFamily: "var(--font-label)", color: "var(--text-secondary)" }}
+        >
+          Mes données personnelles
+        </h2>
+        <div className="flex flex-col gap-2">
+          <a
+            href="/api/account/export-data"
+            download
+            className="text-xs underline underline-offset-2 transition-opacity hover:opacity-70 w-fit"
+            style={{ fontFamily: "var(--font-body)", color: "var(--primary-500)" }}
+          >
+            Télécharger mes données (CSV)
+          </a>
+          <DeleteAccountForm />
+        </div>
+        <p
+          className="text-xs mt-3"
+          style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)", opacity: 0.6 }}
+        >
+          Conformément au RGPD, vous pouvez obtenir une copie de vos données
+          ou demander leur suppression à tout moment.
+        </p>
+      </div>
+
     </div>
   );
 }

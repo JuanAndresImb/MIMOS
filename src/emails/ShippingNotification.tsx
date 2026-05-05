@@ -51,7 +51,7 @@ export default function ShippingNotification({
             <Heading
               style={{ color: white, fontFamily: "Nunito, Helvetica, Arial, sans-serif", fontWeight: 900, fontSize: "22px", margin: 0 }}
             >
-              La Brownie Box Belge
+              MIMOS
             </Heading>
           </Section>
 
@@ -123,10 +123,10 @@ export default function ShippingNotification({
           <Hr style={{ borderColor: "#d4edda", margin: 0 }} />
           <Section style={{ padding: "20px 40px", textAlign: "center" as const }}>
             <Text style={{ color: muted, fontSize: "12px", margin: 0 }}>
-              La Brownie Box Belge — Belgique 🇧🇪
+              MIMOS — Belgique 🇧🇪
             </Text>
             <Text style={{ color: muted, fontSize: "11px", margin: "4px 0 0 0" }}>
-              Pour toute question : bonjour@brownieboxbelge.be
+              Pour toute question : bonjour@mimos.be
             </Text>
           </Section>
         </Container>

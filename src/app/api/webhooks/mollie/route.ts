@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMollieClient } from "@/lib/mollie";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendOrderConfirmationEmail } from "@/actions/emails";
+import { sendOrderConfirmationEmail, sendB2bInvoiceEmail } from "@/actions/emails";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 type OrderRow = {
@@ -10,6 +10,7 @@ type OrderRow = {
   recipient_message: string | null;
   occasion_slug: string | null;
   delivery_address: unknown;
+  is_b2b: boolean;
 } | null;
 
 async function createRecipientPage(
@@ -102,7 +103,7 @@ export async function POST(request: Request) {
     const supabase = createAdminClient();
     const { data: existingOrder } = await supabase
       .from("orders")
-      .select("status, sender_name, recipient_message, occasion_slug, delivery_address")
+      .select("status, sender_name, recipient_message, occasion_slug, delivery_address, is_b2b")
       .eq("id", orderId)
       .maybeSingle();
 
@@ -114,16 +115,23 @@ export async function POST(request: Request) {
       })
       .eq("id", orderId);
 
-    // Envoyer l'email de confirmation seulement lors du premier passage à "paid"
+    // Actions au premier passage à "paid"
     if (newStatus === "paid" && existingOrder?.status !== "paid") {
       await sendOrderConfirmationEmail(orderId).catch((err) =>
         console.error("[webhook/mollie] email error:", err)
       );
 
-      // Générer la page destinataire (idempotent)
+      // Page destinataire (idempotent)
       await createRecipientPage(supabase, orderId, existingOrder).catch((err) =>
         console.error("[webhook/mollie] recipient page error:", err)
       );
+
+      // Facture PDF pour les commandes B2B (fire & forget)
+      if (existingOrder?.is_b2b) {
+        sendB2bInvoiceEmail(orderId).catch((err) =>
+          console.error("[webhook/mollie] B2B invoice error:", err)
+        );
+      }
     }
 
     return NextResponse.json({ ok: true }, { status: 200 });
