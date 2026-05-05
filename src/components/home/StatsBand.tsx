@@ -1,52 +1,52 @@
-// StatsBand — section dark avec chiffres clés (UX-DR14)
-// Fond #1a1a1a, chiffres Nunito 900, contraste WCAG AA vérifié
-
 const STATS = [
-  { value: "100%", label: "Artisanal belge" },
-  { value: "📬", label: "Livraison boîte aux lettres" },
-  { value: "3", label: "Sleeves pour chaque moment" },
+  { value: "100%", label: "Fait maison" },
+  { value: "5★", label: "Avis clients" },
+  { value: "🎁", label: "Pour chaque occasion" },
 ];
 
 export default function StatsBand() {
   return (
     <section
-      className="w-full py-14 md:py-20"
       style={{ backgroundColor: "var(--dark)" }}
       aria-labelledby="stats-heading"
     >
-      <div className="max-w-6xl mx-auto px-6">
-        <h2
-          id="stats-heading"
-          className="sr-only"
-        >
-          Nos engagements
-        </h2>
+      <h2 id="stats-heading" className="sr-only">Nos engagements</h2>
+      <div
+        className="mx-auto px-6"
+        style={{ maxWidth: "72rem", paddingTop: "56px", paddingBottom: "64px" }}
+      >
         <ul
-          className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12"
+          className="grid grid-cols-1 sm:grid-cols-3"
+          style={{ gap: "40px" }}
           role="list"
         >
           {STATS.map((stat) => (
             <li
               key={stat.label}
-              className="flex flex-col items-center text-center gap-3"
+              className="flex flex-col items-center text-center"
+              style={{ gap: "10px" }}
             >
               <span
-                className="text-5xl md:text-6xl"
                 style={{
                   fontFamily: "var(--font-display)",
+                  fontSize: "clamp(2.8rem, 6vw, 4rem)",
                   fontWeight: 900,
-                  color: "var(--primary-500)",
+                  color: "var(--lime)",
                   lineHeight: 1,
                 }}
               >
                 {stat.value}
               </span>
               <span
-                className="text-base"
                 style={{
                   fontFamily: "var(--font-body)",
-                  // #e8e8e8 sur #1a1a1a = ratio ~12:1 — WCAG AAA
+                  fontSize: "13px",
+                  fontWeight: 300,
+                  fontStyle: "italic",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
                   color: "#e8e8e8",
+                  opacity: 0.75,
                 }}
               >
                 {stat.label}

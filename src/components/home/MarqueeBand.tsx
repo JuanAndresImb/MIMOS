@@ -1,55 +1,65 @@
-// MarqueeBand — défilement infini CSS (UX-DR5)
-// Pas de JS — pure animation CSS pour performance maximale
-// Respecte prefers-reduced-motion (WCAG 2.1 AA)
-
 const ITEMS = [
-  "🎂 Anniversaire",
-  "🍫 Brownies artisanaux belges",
-  "🎄 Noël & Fêtes",
-  "✉️ Livraison boîte aux lettres",
-  "💛 Juste parce que",
-  "🎁 Message personnalisé",
-  "💼 Équipes & Entreprises",
-  "🇧🇪 Fait en Belgique",
+  { label: "🎂 Anniversaire",              color: "var(--lavande)" },
+  { label: "🍫 Brownies artisanaux belges", color: "var(--saumon)"  },
+  { label: "🎄 Noël & Fêtes",              color: "var(--menthe)"  },
+  { label: "✉️ Livraison boîte aux lettres",color: "var(--lavande)" },
+  { label: "💛 Juste parce que",            color: "var(--saumon)"  },
+  { label: "🎁 Message personnalisé",       color: "var(--menthe)"  },
+  { label: "💼 Équipes & Entreprises",      color: "var(--lavande)" },
+  { label: "🇧🇪 Fait en Belgique",          color: "var(--saumon)"  },
 ];
 
 export default function MarqueeBand() {
-  // Dupliquer pour la boucle infinie sans saut
   const items = [...ITEMS, ...ITEMS];
 
   return (
     <div
-      className="w-full overflow-hidden py-4"
-      style={{ backgroundColor: "var(--primary-500)" }}
+      className="w-full overflow-hidden"
+      style={{ backgroundColor: "var(--lime)" }}
       aria-hidden="true"
     >
       <style>{`
         @keyframes marquee-scroll {
           from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
+          to   { transform: translateX(-50%); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .marquee-track {
-            animation: none !important;
-          }
+          .marquee-track { animation: none !important; }
         }
       `}</style>
+
+      {/* Ligne lime avec texte foncé */}
       <div
-        className="marquee-track flex gap-0 whitespace-nowrap"
-        style={{
-          animation: "marquee-scroll 28s linear infinite",
-          width: "max-content",
-        }}
+        className="marquee-track flex whitespace-nowrap py-3"
+        style={{ animation: "marquee-scroll 32s linear infinite", width: "max-content" }}
       >
         {items.map((item, i) => (
           <span
             key={i}
-            className="inline-flex items-center gap-2 px-8 text-white font-semibold text-sm"
-            style={{ fontFamily: "var(--font-body)" }}
+            className="inline-flex items-center gap-2 px-6 text-sm font-semibold"
+            style={{ fontFamily: "var(--font-body)", color: "var(--dark)" }}
           >
-            {item}
-            <span className="text-white/40" aria-hidden="true">✦</span>
+            {item.label}
+            <span style={{ color: "rgba(35,21,16,0.3)" }} aria-hidden="true">✦</span>
           </span>
+        ))}
+      </div>
+
+      {/* Bande de blocs colorés défilants */}
+      <div
+        className="marquee-track flex whitespace-nowrap"
+        style={{ animation: "marquee-scroll 32s linear infinite", width: "max-content" }}
+      >
+        {items.map((item, i) => (
+          <div
+            key={i}
+            style={{
+              width: "clamp(180px, 22vw, 280px)",
+              height: "72px",
+              backgroundColor: item.color,
+              flexShrink: 0,
+            }}
+          />
         ))}
       </div>
     </div>

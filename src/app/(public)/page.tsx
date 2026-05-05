@@ -1,22 +1,26 @@
 import type { Metadata } from "next";
-import HeroSection from "@/components/home/HeroSection";
-import MarqueeBand from "@/components/home/MarqueeBand";
-import OccasionsGrid from "@/components/home/OccasionsGrid";
-import StatsBand from "@/components/home/StatsBand";
+import HeroFullscreen from "@/components/home/HeroFullscreen";
+import TrustStrip from "@/components/home/TrustStrip";
+import OccasionsCarousel from "@/components/home/OccasionsCarousel";
+import BrandStory from "@/components/home/BrandStory";
+import ProductCarousel from "@/components/home/ProductCarousel";
+import RecipientTeaser from "@/components/home/RecipientTeaser";
 
 export const metadata: Metadata = {
-  title: "La Brownie Box Belge — Brownie box artisanale livrée en boîte aux lettres",
+  title: "MIMOS — Des attentions artisanales belges",
   description:
-    "Offrez une brownie box artisanale belge avec votre message personnalisé. Livrée directement dans la boîte aux lettres, pour chaque occasion.",
+    "Envoie un brownie artisanal belge avec ton message, soigneusement emballé. Une attention sincère pour chaque occasion — livré directement chez eux.",
 };
 
 export default function HomePage() {
   return (
     <>
-      <HeroSection />
-      <MarqueeBand />
-      <OccasionsGrid />
-      <StatsBand />
+      <HeroFullscreen />
+      <TrustStrip />
+      <OccasionsCarousel />
+      <BrandStory />
+      <ProductCarousel />
+      <RecipientTeaser />
     </>
   );
 }

@@ -80,6 +80,7 @@
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-label: var(--font-mono);
+  --font-script: var(--font-script);
 
   /* Brownie Box — font sizes */
   --font-size-xs: 12px;
@@ -187,38 +188,52 @@
 }
 
 /* ============================================================
-   DESIGN TOKENS — La Brownie Box Belge
-   Source de vérité Figma — ne jamais hardcoder ces valeurs
+   DESIGN TOKENS — MIMOS
+   Palette brand confirmée — ne jamais hardcoder ces valeurs
    ============================================================ */
 
 :root {
-  /* Palette primaire (coral pastel) — source : design-tokens.tokens.json */
-  --primary-50: #fff5f5;
-  --primary-100: #ffe3e3;
-  --primary-500: #ff6b6b;
-  --primary-700: #d63031;
-  --primary-900: #a51d1d;
+  /* Palette MIMOS — pastel doux */
+  --cantaloupe: #FFD8DD;   /* Strawberry Blonde */
+  --chantilly:  #FFFDFE;   /* Branco — fond global */
+  --haze:       #CFC7FA;   /* Lilás */
+  --dahlia:     #FFBBD1;   /* Rosa Bebê — announcement bar */
+  --gumdrop:    #A5E7CB;   /* Menta */
+
+  /* Accents pastel */
+  --lime:     #FBF6BC;     /* Jasmine — bandes accent */
+  --lavande:  #CFC7FA;     /* Lilás — festif */
+  --saumon:   #F8B6A8;     /* Pêssego — affectueux */
+  --menthe:   #A5E7CB;     /* Menta — pro */
+  --bleu:     #ADD8E8;     /* Azul Bebê — hero */
+
+  /* Palette primaire */
+  --primary-50:  var(--chantilly);
+  --primary-100: var(--cantaloupe);
+  --primary-500: #6D65B0;            /* lilas — WCAG AA (4.65:1 sur blanc) */
+  --primary-700: #5550A0;            /* hover */
+  --primary-900: #3D3880;            /* texte rare */
 
   /* Couleurs sémantiques */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #1a1a1a;
-  --text-secondary: #6c757d;
-  --success: #00b894;
-  --warning: #fdcb6e;
-  --error: #d63031;
-  --dark: #1a1a1a;
+  --bg-primary:    var(--chantilly);
+  --bg-secondary:  var(--haze);
+  --text-primary:  #1a1a1a;
+  --text-secondary:#6c757d;
+  --success:       #3D9A72;
+  --warning:       #B07830;
+  --error:         #C45C6A;
+  --dark:          #1E1B2E;   /* indigo sombre — sans brun */
 
-  /* Sleeves — tokens dérivés */
-  --sleeve-festif-bg: #ffe3e3;
-  --sleeve-festif-accent: #ff6b6b;
-  --sleeve-festif-dark: #d63031;
-  --sleeve-aff-bg: #fff8e8;
-  --sleeve-aff-accent: #fdcb6e;
-  --sleeve-aff-dark: #e6a817;
-  --sleeve-pro-bg: #e8faf6;
-  --sleeve-pro-accent: #00b894;
-  --sleeve-pro-dark: #007a63;
+  /* Sleeves — palette pastel */
+  --sleeve-festif-bg:    var(--lavande);
+  --sleeve-festif-accent:#6D65B0;
+  --sleeve-festif-dark:  #3D3880;
+  --sleeve-aff-bg:       var(--saumon);
+  --sleeve-aff-accent:   #C07868;
+  --sleeve-aff-dark:     #7A4535;
+  --sleeve-pro-bg:       var(--menthe);
+  --sleeve-pro-accent:   #3D9A72;
+  --sleeve-pro-dark:     #2D6B50;
 
   /* Espacement (base 4px → 8px grid) */
   --space-xs: 4px;
@@ -235,52 +250,33 @@
   --radius-lg: 16px;
   --radius-full: 999px;
 
-  /* Typographie */
-  --font-display: "Nunito", sans-serif;
-  --font-body: "DM Sans", sans-serif;
-  --font-mono: "Space Mono", monospace;
+  /* Typographie — variables injectées par next/font/local & next/font/google */
+  /* --font-display    → P22 Mackinac Pro 400/500/700/800 (via layout.tsx) */
+  /* --font-script     → Asteria DEMO — décoratif uniquement (via layout.tsx) */
+  /* --font-body       → Outfit 300/400/500/600/700/800/900 — Google Fonts, SIL OFL (via layout.tsx) */
+  /* --font-handwriting→ Caveat (via layout.tsx) */
+  --font-label: var(--font-handwriting); /* compat avec composants existants */
+  --font-mono: var(--font-handwriting);  /* compat avec composants existants */
+  --navbar-h: 80px;
 }
 
-/* ============================================================
-   FONTS — Self-hosted (public/fonts/)
-   ============================================================ */
-
-@font-face {
-  font-family: "Nunito";
-  src: url("/fonts/Nunito-ExtraBold.woff2") format("woff2");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
+/* ── Navbar — toujours couleurs normales (plus de photo hero sombre) ───────── */
+header a,
+header button:not(.cta-btn) {
+  color: var(--text-primary);
+}
+header .logo-text {
+  color: var(--primary-500) !important;
+}
+header .cta-btn {
+  background-color: var(--primary-500) !important;
+  color: white !important;
+}
+/* Scrollé: fond crème flou */
+header[data-solid] {
+  /* bg géré par NavbarScrollBg */
 }
 
-@font-face {
-  font-family: "DM Sans";
-  src: url("/fonts/DMSans-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "DM Sans";
-  src: url("/fonts/DMSans-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Space Mono";
-  src: url("/fonts/SpaceMono-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Space Mono";
-  src: url("/fonts/SpaceMono-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Scrollbar masquée (Chrome/Safari + Firefox) */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }

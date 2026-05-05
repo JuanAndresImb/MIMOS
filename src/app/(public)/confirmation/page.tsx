@@ -8,7 +8,7 @@ import { getMollieClient } from "@/lib/mollie";
 import CreateAccountForm from "./CreateAccountForm";
 
 export const metadata: Metadata = {
-  title: "Confirmation de commande — La Brownie Box Belge",
+  title: "Confirmation de commande",
   robots: { index: false, follow: false },
 };
 
@@ -236,8 +236,14 @@ export default async function ConfirmationPage({ searchParams }: Props) {
             className="text-3xl font-black mb-2"
             style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
           >
-            Commande confirmée !
+            C&apos;est parti !
           </h1>
+          <p
+            className="text-base font-semibold mb-4"
+            style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
+          >
+            Ta douceur est en route.
+          </p>
 
           <p
             className="text-base mb-6"
@@ -245,7 +251,7 @@ export default async function ConfirmationPage({ searchParams }: Props) {
           >
             Merci {order.sender_name}
             {address.prenom
-              ? ` — votre brownie box est en route vers ${address.prenom}${address.ville ? ` à ${address.ville}` : ""}.`
+              ? ` — ta box est en route vers ${address.prenom}${address.ville ? ` à ${address.ville}` : ""}.`
               : "."}
           </p>
 
@@ -284,7 +290,7 @@ export default async function ConfirmationPage({ searchParams }: Props) {
             className="text-sm mb-4"
             style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
           >
-            Vous recevrez une confirmation par email. Votre box sera préparée
+            Tu recevras une confirmation par email. Ta box sera préparée
             avec soin et expédiée dans les prochains jours ouvrables.
           </p>
 
@@ -295,13 +301,22 @@ export default async function ConfirmationPage({ searchParams }: Props) {
             </div>
           )}
 
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center px-8 py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-2"
-            style={{ backgroundColor: "var(--primary-500)", fontFamily: "var(--font-body)" }}
-          >
-            Retour à l&apos;accueil
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/offrir/anniversaire"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-2"
+              style={{ backgroundColor: "var(--primary-500)", fontFamily: "var(--font-body)" }}
+            >
+              Faire un autre geste
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-base transition-colors hover:bg-[var(--primary-100)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-2"
+              style={{ color: "var(--text-primary)", border: "2px solid var(--primary-100)", fontFamily: "var(--font-body)" }}
+            >
+              Retour à l&apos;accueil
+            </Link>
+          </div>
         </div>
       </div>
     </div>

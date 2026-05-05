@@ -19,6 +19,15 @@ const messageSchema = z.object({
   senderName: z.string().min(1, "Requis").max(100, "Maximum 100 caractères"),
 });
 
+const b2bSchema = z.object({
+  companyName: z.string().min(1, "Requis").max(200, "Maximum 200 caractères"),
+  vatNumber: z
+    .string()
+    .regex(/^BE\d{10}$/, "Format attendu : BE suivi de 10 chiffres")
+    .optional()
+    .or(z.literal("")),
+});
+
 const livraisonSchema = z.object({
   email: z.string().min(1, "Requis").email("Email invalide"),
   prenom: z.string().min(1, "Requis").max(100),
@@ -32,6 +41,7 @@ const livraisonSchema = z.object({
 });
 
 type MessageData = z.infer<typeof messageSchema>;
+type B2bData = z.infer<typeof b2bSchema>;
 type LivraisonData = z.infer<typeof livraisonSchema>;
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -46,7 +56,7 @@ type Step = 1 | 2 | 3;
 
 // ─── Sous-composants ──────────────────────────────────────────────────────────
 
-function StepIndicator({ current }: { current: Step }) {
+function StepIndicator({ current, accent }: { current: Step; accent: string }) {
   const steps = [
     { num: 1 as Step, label: "Message" },
     { num: 2 as Step, label: "Livraison" },
@@ -66,12 +76,12 @@ function StepIndicator({ current }: { current: Step }) {
               style={{
                 backgroundColor:
                   current === step.num
-                    ? "var(--primary-500)"
+                    ? accent
                     : current > step.num
-                    ? "var(--success)"
-                    : "var(--primary-100)",
+                    ? accent
+                    : "rgba(255,255,255,0.55)",
                 color:
-                  current >= step.num ? "white" : "var(--text-secondary)",
+                  current >= step.num ? "white" : "rgba(30,27,46,0.35)",
               }}
               aria-current={current === step.num ? "step" : undefined}
             >
@@ -83,8 +93,8 @@ function StepIndicator({ current }: { current: Step }) {
                 fontFamily: "var(--font-label)",
                 color:
                   current === step.num
-                    ? "var(--primary-700)"
-                    : "var(--text-secondary)",
+                    ? accent
+                    : "rgba(30,27,46,0.45)",
               }}
             >
               {step.label}
@@ -96,8 +106,8 @@ function StepIndicator({ current }: { current: Step }) {
               style={{
                 backgroundColor:
                   current > step.num
-                    ? "var(--primary-500)"
-                    : "var(--primary-100)",
+                    ? accent
+                    : "rgba(255,255,255,0.4)",
               }}
             />
           )}
@@ -159,12 +169,15 @@ const inputStyle = {
 function StepMessage({
   occasion,
   defaultValues,
+  defaultB2b,
   onNext,
 }: {
   occasion: Occasion;
   defaultValues?: Partial<MessageData>;
-  onNext: (data: MessageData) => void;
+  defaultB2b?: Partial<B2bData>;
+  onNext: (data: MessageData, b2b?: B2bData) => void;
 }) {
+  const isB2b = occasion.slug === "entreprise";
   const {
     register,
     handleSubmit,
@@ -174,23 +187,39 @@ function StepMessage({
     resolver: standardSchemaResolver(messageSchema),
     defaultValues,
   });
+  const {
+    register: regB2b,
+    handleSubmit: handleB2bSubmit,
+    formState: { errors: errorsB2b },
+  } = useForm<B2bData>({
+    resolver: standardSchemaResolver(b2bSchema),
+    defaultValues: defaultB2b,
+  });
 
   const message = watch("recipientMessage", defaultValues?.recipientMessage ?? "");
 
+  function handleFormSubmit(msgData: MessageData) {
+    if (isB2b) {
+      handleB2bSubmit((b2b) => onNext(msgData, b2b))();
+    } else {
+      onNext(msgData);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onNext)} noValidate>
+    <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
       <h2
         className="text-2xl font-black mb-6"
         style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
       >
-        Votre message personnalisé
+        Dis-leur ce que tu ressens.
       </h2>
 
-      {/* Preview sleeve */}
+      {/* Aperçu message */}
       <div
         className="rounded-2xl p-6 mb-6 min-h-[120px] relative"
-        style={{ backgroundColor: occasion.sleeveTokens.bg }}
-        aria-label="Aperçu du sleeve"
+        style={{ backgroundColor: "white", border: `1.5px solid ${occasion.sleeveTokens.accent}22` }}
+        aria-label="Aperçu de ton message"
       >
         <span
           className="block text-xs uppercase tracking-widest mb-3"
@@ -199,7 +228,7 @@ function StepMessage({
             color: occasion.sleeveTokens.accent,
           }}
         >
-          Aperçu du sleeve — {occasion.sleeve}
+          Aperçu de ton message
         </span>
         <p
           className="text-base leading-relaxed italic"
@@ -218,7 +247,7 @@ function StepMessage({
       {/* Textarea message */}
       <div className="mb-4">
         <Label htmlFor="recipientMessage" required>
-          Message pour le destinataire
+          Ton message
         </Label>
         <textarea
           id="recipientMessage"
@@ -243,14 +272,14 @@ function StepMessage({
       </div>
 
       {/* Nom expéditeur */}
-      <div className="mb-8">
+      <div className={isB2b ? "mb-4" : "mb-8"}>
         <Label htmlFor="senderName" required>
-          Votre prénom (de la part de…)
+          {isB2b ? "Nom de l'expéditeur (de la part de…)" : "Ton prénom (de la part de…)"}
         </Label>
         <input
           id="senderName"
           type="text"
-          placeholder="Marie"
+          placeholder={isB2b ? "Jean Dupont ou Acme SA" : "Marie"}
           className={inputClass}
           style={inputStyle}
           {...register("senderName")}
@@ -258,15 +287,64 @@ function StepMessage({
         <FieldError message={errors.senderName?.message} />
       </div>
 
+      {/* Champs B2B — visibles uniquement pour l'occasion entreprise */}
+      {isB2b && (
+        <div
+          className="rounded-2xl p-4 mb-8"
+          style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--primary-100)" }}
+        >
+          <p
+            className="text-xs uppercase tracking-widest mb-3"
+            style={{ fontFamily: "var(--font-label)", color: "var(--primary-500)" }}
+          >
+            Informations entreprise
+          </p>
+          <div className="mb-3">
+            <Label htmlFor="companyName" required>
+              Nom de l&apos;entreprise
+            </Label>
+            <input
+              id="companyName"
+              type="text"
+              placeholder="Acme SA"
+              className={inputClass}
+              style={inputStyle}
+              {...regB2b("companyName")}
+            />
+            <FieldError message={errorsB2b.companyName?.message} />
+          </div>
+          <div>
+            <Label htmlFor="vatNumber">
+              Numéro de TVA
+              <span
+                className="ml-1 font-normal text-xs"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                (optionnel — requis pour la facture)
+              </span>
+            </Label>
+            <input
+              id="vatNumber"
+              type="text"
+              placeholder="BE0123456789"
+              className={inputClass}
+              style={inputStyle}
+              {...regB2b("vatNumber")}
+            />
+            <FieldError message={errorsB2b.vatNumber?.message} />
+          </div>
+        </div>
+      )}
+
       <button
         type="submit"
-        className="w-full py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-2"
+        className="w-full py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         style={{
           backgroundColor: occasion.sleeveTokens.accent,
           fontFamily: "var(--font-body)",
         }}
       >
-        Suivant — Adresse de livraison
+        Suivant — Où on l&apos;envoie ?
       </button>
     </form>
   );
@@ -300,13 +378,13 @@ function StepLivraison({
         className="text-2xl font-black mb-6"
         style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
       >
-        Adresse de livraison
+        Où on l&apos;envoie ?
       </h2>
 
       {/* Email */}
       <div className="mb-4">
         <Label htmlFor="email" required>
-          Votre email (confirmation de commande)
+          Ton email (pour confirmer ta commande)
         </Label>
         <input
           id="email"
@@ -448,13 +526,13 @@ function StepLivraison({
         </button>
         <button
           type="submit"
-          className="flex-[2] py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-2"
+          className="flex-[2] py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
           style={{
             backgroundColor: occasion.sleeveTokens.accent,
             fontFamily: "var(--font-body)",
           }}
         >
-          Suivant — Résumé & paiement
+          Vérifier ma commande
         </button>
       </div>
     </form>
@@ -468,6 +546,7 @@ function StepPaiement({
   occasion,
   messageData,
   livraisonData,
+  b2bData,
   onBack,
   initialPromoCode,
   idempotencyKey,
@@ -476,10 +555,13 @@ function StepPaiement({
   occasion: Occasion;
   messageData: MessageData;
   livraisonData: LivraisonData;
+  b2bData?: B2bData;
   onBack: () => void;
   initialPromoCode?: string;
   idempotencyKey: string;
 }) {
+  const isB2b = !!b2bData;
+  const [paymentMethod, setPaymentMethod] = useState<"standard" | "banktransfer">("standard");
   const [promoInput, setPromoInput] = useState("");
   const [promoError, setPromoError] = useState("");
   const [promoDiscount, setPromoDiscount] = useState(0);
@@ -544,6 +626,10 @@ function StepPaiement({
           pays: "Belgique",
         },
         promoCode: promoApplied || undefined,
+        isB2b: !!b2bData,
+        companyName: b2bData?.companyName,
+        vatNumber: b2bData?.vatNumber || undefined,
+        paymentMethod,
       });
       if (!result.success) {
         setSubmitError(result.error);
@@ -581,7 +667,7 @@ function StepPaiement({
         className="text-2xl font-black mb-6"
         style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
       >
-        Résumé & paiement
+        Tout est en ordre ?
       </h2>
 
       {/* Résumé commande */}
@@ -593,7 +679,7 @@ function StepPaiement({
           className="text-xs uppercase tracking-widest mb-3"
           style={{ fontFamily: "var(--font-label)", color: "var(--primary-700)" }}
         >
-          Votre commande
+          Ce que tu envoies
         </p>
 
         <SummaryRow label={product.name} value={formatPriceCents(product.price_cents)} />
@@ -700,12 +786,56 @@ function StepPaiement({
         </div>
       )}
 
+      {/* Sélecteur mode de paiement — B2B uniquement */}
+      {isB2b && (
+        <div className="mb-6">
+          <p
+            className="text-xs uppercase tracking-widest mb-3"
+            style={{ fontFamily: "var(--font-label)", color: "var(--text-secondary)" }}
+          >
+            Mode de paiement
+          </p>
+          <div className="flex flex-col gap-2">
+            {(
+              [
+                { value: "standard", label: "Carte bancaire / Bancontact", icon: "💳", note: "Paiement immédiat via Mollie" },
+                { value: "banktransfer", label: "Virement SEPA", icon: "🏦", note: "Réservé aux entreprises — 2–3 jours ouvrables" },
+              ] as const
+            ).map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setPaymentMethod(opt.value)}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all"
+                style={{
+                  border: `2px solid ${paymentMethod === opt.value ? "var(--primary-500)" : "var(--primary-100)"}`,
+                  backgroundColor: paymentMethod === opt.value ? "var(--primary-50)" : "white",
+                }}
+              >
+                <span className="text-xl">{opt.icon}</span>
+                <div>
+                  <p className="text-sm font-semibold" style={{ fontFamily: "var(--font-body)", color: "var(--text-primary)" }}>
+                    {opt.label}
+                  </p>
+                  <p className="text-xs" style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}>
+                    {opt.note}
+                  </p>
+                </div>
+                {paymentMethod === opt.value && (
+                  <span className="ml-auto text-sm font-bold" style={{ color: "var(--primary-500)" }}>✓</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Note paiement */}
       <p
         className="text-xs text-center mb-4"
         style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
       >
-        🔒 Paiement sécurisé via Mollie
+        Paiement sécurisé · Mollie
       </p>
 
       <div className="flex gap-3">
@@ -732,7 +862,11 @@ function StepPaiement({
             fontFamily: "var(--font-body)",
           }}
         >
-          {isSubmitting ? "Traitement en cours…" : `Payer ${formatPriceCents(totalCents)}`}
+          {isSubmitting
+            ? "Traitement en cours…"
+            : paymentMethod === "banktransfer"
+            ? `Confirmer la commande — ${formatPriceCents(totalCents)}`
+            : `Payer ${formatPriceCents(totalCents)}`}
         </button>
       </div>
     </div>
@@ -744,6 +878,7 @@ function StepPaiement({
 export default function TunnelClient({ product, occasion, initialPromoCode }: Props) {
   const [step, setStep] = useState<Step>(1);
   const [messageData, setMessageData] = useState<MessageData | null>(null);
+  const [b2bData, setB2bData] = useState<B2bData | undefined>(undefined);
   const [livraisonData, setLivraisonData] = useState<LivraisonData | null>(null);
 
   // Clé d'idempotence stable pour toute la durée de vie du composant.
@@ -779,7 +914,7 @@ export default function TunnelClient({ product, occasion, initialPromoCode }: Pr
         </p>
       </div>
 
-      <StepIndicator current={step} />
+      <StepIndicator current={step} accent={occasion.sleeveTokens.accent} />
 
       {/* Carte formulaire */}
       <div
@@ -790,8 +925,10 @@ export default function TunnelClient({ product, occasion, initialPromoCode }: Pr
           <StepMessage
             occasion={occasion}
             defaultValues={messageData ?? undefined}
-            onNext={(data) => {
+            defaultB2b={b2bData}
+            onNext={(data, b2b) => {
               setMessageData(data);
+              setB2bData(b2b);
               setStep(2);
             }}
           />
@@ -813,6 +950,7 @@ export default function TunnelClient({ product, occasion, initialPromoCode }: Pr
             occasion={occasion}
             messageData={messageData}
             livraisonData={livraisonData}
+            b2bData={b2bData}
             onBack={() => setStep(2)}
             initialPromoCode={initialPromoCode}
             idempotencyKey={idempotencyKeyRef.current}

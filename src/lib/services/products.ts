@@ -31,3 +31,40 @@ export async function getProductByOccasion(
 
   return data;
 }
+
+/**
+ * Récupère tous les produits actifs, triés du moins au plus cher.
+ */
+export async function getAllActiveProducts(): Promise<Product[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("is_active", true)
+    .order("price_cents", { ascending: true });
+
+  if (error) {
+    console.error("[getAllActiveProducts] Supabase error:", error.message);
+    return [];
+  }
+  return data ?? [];
+}
+
+/**
+ * Récupère un produit actif par son ID.
+ */
+export async function getProductById(id: string): Promise<Product | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[getProductById] Supabase error:", error.message);
+    return null;
+  }
+  return data;
+}

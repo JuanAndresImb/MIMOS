@@ -1,20 +1,21 @@
-// src/messages/fr.ts
-// SOURCE DE VÉRITÉ pour toutes les strings utilisateur — zéro string hardcodée dans le code
-// Architecture i18n prête pour NL/EN en Phase 2 : ajouter messages/nl.ts et messages/en.ts
-
 const messages = {
-  // Navigation
   nav: {
-    occasions: "Occasions",
+    offrirBox: "Pour qui ?",
+    pourUnePersonne: "Pour une personne",
+    pourUneEquipe: "Pour un groupe",
+    equipeEntreprise: "Pour mon équipe",
+    commentCaMarche: "Comment ça marche",
     entreprises: "Entreprises",
-    commander: "Commander",
+    commander: "Choisir le moment",
+    monCompte: "Mon compte",
     menu: "Menu",
     fermer: "Fermer le menu",
+    sleevePersonnalise: "Personnalisé avec son prénom",
+    nosDouceurs: "Nos douceurs",
   },
 
-  // Occasions
   occasions: {
-    titre: "Choisissez votre occasion",
+    titre: "C'est pour quelle occasion ?",
     anniversaire: "Anniversaire",
     noelFetes: "Noël & Fêtes",
     surprise: "Juste parce que",
@@ -22,7 +23,21 @@ const messages = {
     entreprise: "Entreprise",
   },
 
-  // Tunnel d'achat
+  hero: {
+    eyebrow: "Fait à la main · Belgique",
+    headline1: "Pour quand",
+    headline2: "un message",
+    headline3: "ne suffit",
+    headline4: "pas.",
+    sousTitre: "Parce que certaines personnes méritent plus qu'un SMS. Un brownie artisanal belge, ton message, livré directement chez eux.",
+    ctaPrincipal: "Choisir l'occasion",
+    ctaSecondaire: "Comment ça marche",
+    badge: "Fait en Belgique",
+    trust1: "Brownies artisanaux belges",
+    trust2: "Message personnalisé",
+    trust3: "Expédié sous 24h",
+  },
+
   tunnel: {
     etapes: {
       occasion: "Occasion",
@@ -31,11 +46,10 @@ const messages = {
       paiement: "Paiement",
     },
     message: {
-      titre: "Votre message personnalisé",
-      placeholder:
-        "Écrivez votre message ici… il sera imprimé sur le sleeve de la box.",
+      titre: "Qu'est-ce que tu veux lui dire ?",
+      placeholder: "Écris ton message ici… il accompagne ton envoi.",
       compteur: "{count}/{max} caractères",
-      apercu: "Aperçu du sleeve",
+      apercu: "Aperçu de la sleeve",
     },
     livraison: {
       titre: "Adresse de livraison",
@@ -51,50 +65,151 @@ const messages = {
       titre: "Paiement",
       codePromo: "Code promo",
       appliquer: "Appliquer",
-      total: "Total",
-      fraisLivraison: "Frais de livraison",
-      payer: "Payer maintenant",
+      total: "Total TTC",
+      fraisLivraison: "Livraison offerte",
+      payer: "Payer {montant}",
+      confirmer: "Confirmer la commande — {montant}",
       securise: "Paiement sécurisé via Mollie",
+      remise: "Réduction",
+      sousTotal: "Sous-total",
+      modePaiement: "Mode de paiement",
+      carteContacts: "Carte / Bancontact",
+      virementSepa: "Virement bancaire SEPA",
+      virementDesc: "Délai 7 jours ouvrés",
     },
     boutons: {
       suivant: "Suivant",
-      precedent: "Précédent",
+      precedent: "Retour",
       commander: "Commander",
+    },
+    b2b: {
+      commandeEntreprise: "Commande entreprise",
+      nomEntreprise: "Nom de l'entreprise",
+      numeroTva: "Numéro de TVA belge",
+      tvaNonValide: "Format : BE0123456789",
     },
   },
 
-  // Confirmation commande
   confirmation: {
-    titre: "Commande confirmée !",
-    sousTitre: "Merci pour votre commande.",
-    description:
-      "Vous recevrez une confirmation par email sous peu. Votre box sera préparée avec soin.",
+    titre: "C'est parti !",
+    sousTitre: "Ta douceur est en route.",
+    description: "Tu vas recevoir un email de confirmation dans quelques instants. Ta box sera préparée avec soin.",
+    reference: "Référence de commande",
+    montant: "Montant total",
+    retourAccueil: "Retour à l'accueil",
+    suivreCommande: "Suivre ma commande",
+    creerCompte: "Créer un compte pour suivre ma commande",
+  },
+
+  confirmationB2b: {
+    titre: "Commande enregistrée",
+    titrePaye: "Paiement reçu !",
+    sousTitre: "Ta commande est enregistrée. Effectue le virement ci-dessous pour la finaliser.",
+    sousTitrePaye: "Ton virement a bien été reçu. La facture t'a été envoyée par email.",
+    recap: "Récapitulatif",
+    reference: "Référence de commande",
+    entreprise: "Entreprise",
+    montant: "Total TTC",
+    instructions: "Instructions de virement",
+    banque: "Banque",
+    iban: "IBAN",
+    bic: "BIC",
+    communication: "Communication",
+    montantExact: "Montant exact",
+    coordonneesEmail: "Les coordonnées bancaires te seront envoyées par email dans quelques instants.",
+    avertissement: "⚠️ Utilise exactement la communication indiquée. Le virement doit être reçu dans les 7 jours ouvrés. Passé ce délai, la commande sera annulée.",
+    retourAccueil: "Retour à l'accueil",
+    suivreCommande: "Suivre ma commande",
+  },
+
+  destinataire: {
+    titreSurprise: "Tu as reçu une surprise !",
+    messagExpire: "Ce message n'est plus disponible",
+    messageExpireDesc: "Cette page a expiré ou a été supprimée conformément à notre politique de confidentialité.",
+    de: "De",
+    cta: "En envoyer une moi aussi",
+    promoCode: "Ton code promo",
+    promoValeur: "{discount} sur ta première commande",
+    promoExpire: "Valable jusqu'au {date}",
+    partager: "Partager",
     retourAccueil: "Retour à l'accueil",
   },
 
-  // Page destinataire
-  destinataire: {
-    titre: "Vous avez reçu une surprise !",
-    de: "De la part de",
-    cta: "Commander à mon tour",
-    partager: "Partager",
-    codePromo: "Profitez de {discount} sur votre première commande",
-  },
-
-  // B2B
   b2b: {
-    titre: "Commandes entreprise",
-    sousTitre: "Pour vos équipes, clients et partenaires",
+    eyebrow: "Commandes entreprise",
+    titre: "Des attentions pour tes équipes",
+    sousTitre: "Onboarding, remerciements, cadeaux clients — un geste simple et mémorable.",
+    ctaPrincipal: "Commander pour mon équipe",
+    avantages: {
+      message: {
+        titre: "Message personnalisé",
+        texte: "Un message unique imprimé sur la sleeve — de toi, pas d'un catalogue.",
+      },
+      livraison: {
+        titre: "Livraison directe",
+        texte: "Livré directement chez le destinataire. Aucune logistique à gérer de ton côté.",
+      },
+      facture: {
+        titre: "Facture TVA",
+        texte: "Saisis ton numéro de TVA à la commande et reçois une facture déductible.",
+      },
+      artisanal: {
+        titre: "Artisanal & Belge",
+        texte: "Brownies faits maison depuis la Belgique. Un cadeau qui sort vraiment du lot.",
+      },
+    },
+    usecasesTitre: "Cas d'usage fréquents",
+    usecases: [
+      "Accueillir un nouveau membre de l'équipe",
+      "Remercier après un projet réussi",
+      "Cadeau client après signature",
+      "Fêter l'anniversaire d'un collègue",
+      "Célébrer un objectif atteint",
+    ],
     formulaire: {
+      titre: "Ta commande",
       nomEntreprise: "Nom de l'entreprise",
       numeroTva: "Numéro de TVA",
+      email: "Email professionnel",
+      prenom: "Prénom",
+      nom: "Nom",
       nombreBoxes: "Nombre de boxes",
       messageCommun: "Message commun",
-      submit: "Demander un devis",
+      submit: "Passer la commande",
     },
   },
 
-  // Admin
+  compte: {
+    titre: "Mon compte",
+    informations: "Mes informations",
+    commandes: "Mes commandes",
+    donnees: "Mes données personnelles",
+    telechargerDonnees: "Télécharger mes données (CSV)",
+    supprimerCompte: "Supprimer mon compte",
+    supprimerConfirm: "Tu es sûr(e) ? Cette action est irréversible.",
+    aucuneCommande: "Aucune commande pour l'instant.",
+    connexion: "Se connecter",
+    deconnexion: "Se déconnecter",
+  },
+
+  footer: {
+    cgv: "Conditions générales de vente",
+    mentionsLegales: "Mentions légales",
+    confidentialite: "Politique de confidentialité",
+    copyright: "© {year} MIMOS",
+  },
+
+  erreurs: {
+    stockEpuise: "Ce produit est actuellement en rupture de stock.",
+    codePromoInvalide: "Ce code promo est invalide ou expiré.",
+    codePromoDejaUtilise: "Ce code promo a déjà été utilisé.",
+    erreurPaiement: "Une erreur est survenue lors du paiement. Réessaie.",
+    erreurGenerale: "Une erreur inattendue est survenue. Réessaie.",
+    champObligatoire: "Ce champ est obligatoire.",
+    emailInvalide: "Adresse email invalide.",
+    tvaInvalide: "Numéro de TVA belge invalide.",
+  },
+
   admin: {
     connexion: {
       titre: "Connexion",
@@ -103,84 +218,15 @@ const messages = {
       seConnecter: "Se connecter",
       erreur: "Email ou mot de passe incorrect",
     },
-    dashboard: {
-      titre: "Dashboard",
-      commandes: "Commandes",
-      produits: "Produits",
-      clients: "Clients",
-      codesPromo: "Codes promo",
-      factures: "Factures",
-    },
-    commandes: {
-      titre: "Commandes",
-      statuts: {
-        pending: "En attente",
-        paid: "Payée",
-        preparing: "En préparation",
-        shipped: "Expédiée",
-        delivered: "Livrée",
-        cancelled: "Annulée",
-      },
-    },
-    produits: {
-      titre: "Produits",
-      ajouter: "Ajouter un produit",
-      modifier: "Modifier",
-      supprimer: "Supprimer",
-      stock: "Stock",
-      prix: "Prix",
-      actif: "Actif",
-    },
   },
 
-  // Erreurs
-  erreurs: {
-    stockEpuise: "Ce produit est actuellement en rupture de stock.",
-    codePromoInvalide: "Ce code promo est invalide ou expiré.",
-    codePromoDejaUtilise: "Ce code promo a déjà été utilisé.",
-    erreurPaiement: "Une erreur est survenue lors du paiement. Veuillez réessayer.",
-    erreurGenerale:
-      "Une erreur inattendue s'est produite. Veuillez réessayer.",
-    champObligatoire: "Ce champ est obligatoire.",
-    emailInvalide: "Adresse email invalide.",
-    tvaInvalide: "Numéro de TVA belge invalide.",
+  langues: {
+    changer: "Langue",
+    fr: "Français",
+    nl: "Nederlands",
+    en: "English",
   },
+};
 
-  // Mentions légales & conformité
-  legal: {
-    cgv: "Conditions générales de vente",
-    mentionsLegales: "Mentions légales",
-    politiqueRetour: "Politique de retour",
-    rgpd: "Politique de confidentialité",
-    consentementCookies:
-      "Ce site utilise des cookies pour améliorer votre expérience.",
-    accepter: "Accepter",
-    refuser: "Refuser",
-  },
-
-  // Allergènes
-  allergenes: {
-    titre: "Allergènes",
-    liste: {
-      gluten: "Gluten",
-      oeufs: "Œufs",
-      lait: "Lait",
-      noix: "Fruits à coque",
-      soja: "Soja",
-      arachides: "Arachides",
-    },
-    avertissement: "Fabriqué dans un atelier utilisant des {allergenes}.",
-  },
-
-  // Accessibilité
-  a11y: {
-    ouvrirMenu: "Ouvrir le menu de navigation",
-    fermerMenu: "Fermer le menu de navigation",
-    imageProduit: "Photo de {produit}",
-    chargement: "Chargement en cours…",
-    etapeActive: "Étape {numero} sur {total} : {nom}",
-  },
-} as const;
-
-export default messages;
 export type Messages = typeof messages;
+export default messages;

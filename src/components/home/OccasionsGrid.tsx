@@ -19,33 +19,32 @@ const OCCASION_ICONS: Record<string, string> = {
 export default function OccasionsGrid() {
   return (
     <section
-      className="w-full py-16 md:py-24"
+      className="w-full py-20 md:py-32"
       style={{ backgroundColor: "var(--bg-primary)" }}
       aria-labelledby="occasions-heading"
     >
       <div className="max-w-6xl mx-auto px-6">
-        {/* Header section */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
           <span
             className="inline-block text-xs uppercase tracking-widest px-3 py-1 rounded-full mb-4"
             style={{
-              fontFamily: "var(--font-label)",
-              backgroundColor: "var(--primary-50)",
-              color: "var(--primary-700)",
+              fontFamily: "var(--font-handwriting)",
+              backgroundColor: "var(--haze)",
+              color: "var(--text-secondary)",
             }}
           >
-            Choisissez l&apos;occasion
+            C&apos;est pour quelle occasion ?
           </span>
           <h2
             id="occasions-heading"
             className="text-3xl md:text-4xl"
             style={{
               fontFamily: "var(--font-display)",
-              fontWeight: 900,
+              fontWeight: 700,
               color: "var(--text-primary)",
             }}
           >
-            Une box pour chaque moment
+            Une attention pour chaque moment
           </h2>
           <p
             className="mt-3 text-base max-w-[32rem] mx-auto"
@@ -54,11 +53,10 @@ export default function OccasionsGrid() {
               color: "var(--text-secondary)",
             }}
           >
-            Sélectionnez l&apos;occasion — le sleeve change, le message est le vôtre.
+            Choisis l&apos;occasion — le sleeve change, le message est le tien.
           </p>
         </div>
 
-        {/* Grid occasions */}
         <ul
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           role="list"
@@ -72,9 +70,8 @@ export default function OccasionsGrid() {
                   backgroundColor: occasion.sleeveTokens.bg,
                   border: `2px solid transparent`,
                 }}
-                aria-label={`Offrir pour ${occasion.nom}`}
+                aria-label={`Découvrir — ${occasion.nom}`}
               >
-                {/* Image sleeve */}
                 <div
                   className="relative w-full"
                   style={{ aspectRatio: "3/2" }}
@@ -88,27 +85,26 @@ export default function OccasionsGrid() {
                   />
                 </div>
 
-                {/* Contenu card */}
                 <div className="flex flex-col gap-3 p-5">
-                  {/* Badge sleeve (UX-DR12 : légèrement incliné) */}
+                  {/* Badge sleeve — texte foncé pour lisibilité sur pastels clairs */}
                   <span
                     className="inline-block text-xs uppercase tracking-widest px-3 py-1 rounded-full w-fit"
                     style={{
-                      fontFamily: "var(--font-label)",
-                      backgroundColor: occasion.sleeveTokens.accent,
-                      color: "#ffffff",
+                      fontFamily: "var(--font-handwriting)",
+                      backgroundColor: occasion.sleeveTokens.bg,
+                      color: occasion.sleeveTokens.dark,
+                      border: `1.5px solid ${occasion.sleeveTokens.accent}`,
                       transform: "rotate(-1.5deg)",
                     }}
                   >
                     Sleeve {occasion.sleeve}
                   </span>
 
-                  {/* Nom */}
                   <h3
                     className="text-xl"
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontWeight: 900,
+                      fontWeight: 700,
                       color: occasion.sleeveTokens.dark,
                     }}
                   >
@@ -116,7 +112,6 @@ export default function OccasionsGrid() {
                     {occasion.nom}
                   </h3>
 
-                  {/* Accroche */}
                   <p
                     className="text-sm leading-relaxed"
                     style={{
@@ -128,7 +123,6 @@ export default function OccasionsGrid() {
                     {occasion.accroche}
                   </p>
 
-                  {/* CTA inline */}
                   <span
                     className="inline-flex items-center gap-1 text-sm font-semibold mt-1 group-hover:gap-2 transition-all"
                     style={{
@@ -137,7 +131,7 @@ export default function OccasionsGrid() {
                     }}
                     aria-hidden="true"
                   >
-                    Offrir cette box
+                    Envoyer une douceur
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

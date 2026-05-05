@@ -51,13 +51,22 @@ export default function ProductCard({ product, occasionSlug, sleeveTokens }: Pro
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
-              // Placeholder si pas d'image produit encore
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className="absolute inset-0 flex items-center justify-center"
+                aria-label={`Visuel ${product.name} — à venir`}
+              >
                 <span
-                  className="text-6xl opacity-30"
-                  aria-label={`Photo de ${product.name} — à venir`}
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "var(--dark)",
+                    opacity: 0.3,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
                 >
-                  🍫
+                  Visuel bientôt
                 </span>
               </div>
             )}
@@ -139,7 +148,7 @@ export default function ProductCard({ product, occasionSlug, sleeveTokens }: Pro
                 }}
                 aria-label={`Commander ${product.name} pour ${formatPriceCents(product.price_cents)} TVA incluse`}
               >
-                Commander cette box
+                Choisir ce format
               </Link>
             )}
 

@@ -2,189 +2,208 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Comment ça marche — La Brownie Box Belge",
+  title: "Comment ça marche — MIMOS",
   description:
-    "Offrir une brownie box artisanale belge en 3 étapes simples : choisissez l'occasion, écrivez votre message, on s'occupe du reste. Livraison directement en boîte aux lettres.",
+    "Trois minutes pour transformer une pensée en geste réel. Tu choisis le moment, tu écris quelques mots, on s'occupe du reste.",
 };
-
-// ─── Données ──────────────────────────────────────────────────────────────────
 
 const STEPS = [
   {
     num: 1,
-    icon: "🎁",
-    titre: "Choisissez l'occasion",
+    titre: "Tu choisis le moment",
     description:
-      "Anniversaire, fêtes, surprise, collègue… Chaque occasion a son sleeve personnalisé. Sélectionnez celle qui correspond et découvrez le design dédié.",
+      "Anniversaire, merci sincère, juste parce que… Chaque moment a le sien. Tu sélectionnes celui qui correspond à la personne que tu as en tête.",
   },
   {
     num: 2,
-    icon: "✍️",
-    titre: "Écrivez votre message",
+    titre: "Tu écris quelques mots",
     description:
-      "Votre message est imprimé directement sur le sleeve de la box. Pas de carte séparée — le mot du cœur fait partie du cadeau lui-même.",
+      "Un message court, une phrase qui compte. Rien d'autre ne t'est demandé. C'est toi qui décides ce que tu veux dire.",
   },
   {
     num: 3,
-    icon: "📬",
-    titre: "On livre dans la boîte aux lettres",
+    titre: "On s'occupe du reste",
     description:
-      "Indiquez l'adresse du destinataire et c'est parti. La box est conçue pour rentrer dans une boîte aux lettres standard — pas besoin que quelqu'un soit présent.",
+      "La box est préparée à la main en Belgique, emballée avec soin, et livrée directement chez eux. Tu n'as rien à gérer.",
   },
 ];
 
 const FAQS = [
   {
-    question: "Est-ce que la box rentre vraiment dans une boîte aux lettres ?",
+    question: "Combien de temps ça prend pour commander ?",
     answer:
-      "Oui. Le format de la box a été pensé dès le départ pour rentrer dans une boîte aux lettres aux normes belges. Pas besoin que le destinataire soit là — c'est l'avantage.",
+      "En moyenne, trois minutes. Tu choisis le moment, tu écris ton message, tu indiques l'adresse. On s'occupe du reste.",
   },
   {
     question: "Combien de brownies y a-t-il dans la box ?",
     answer:
-      "6 brownies artisanaux belges, préparés à la main avec du bon chocolat. Juste ce qu'il faut pour un vrai moment gourmand.",
+      "Selon le format : 6 brownies (Le Clin d'Œil), 9 brownies (L'Attention) ou 12 brownies (Le Grand Geste). Tous faits à la main en Belgique.",
   },
   {
-    question: "Le destinataire sait-il qui envoie la box ?",
+    question: "Est-ce qu'on peut envoyer à l'étranger ?",
     answer:
-      "Oui — votre prénom et votre message apparaissent sur le sleeve. C'est voulu : un cadeau anonyme n'a pas de valeur émotionnelle. Vous pouvez évidemment rester sobre si vous préférez.",
-  },
-  {
-    question: "Est-ce que je peux envoyer une box à l'étranger ?",
-    answer:
-      "Pour l'instant, la livraison est disponible uniquement en Belgique. On travaille sur les envois vers la France et les Pays-Bas — restez à l'affût.",
+      "Pour l'instant, la livraison est disponible uniquement en Belgique. On travaille sur les envois vers la France et les Pays-Bas.",
   },
   {
     question: "Quels sont les délais de livraison ?",
     answer:
-      "La box est préparée dans les 1 à 2 jours ouvrables après la commande, puis expédiée par bpost. Comptez 2 à 4 jours ouvrables au total selon votre localisation en Belgique.",
+      "La box est préparée dans les 1 à 2 jours ouvrables, puis expédiée par bpost. Comptez 2 à 4 jours ouvrables au total.",
   },
   {
     question: "Les brownies contiennent-ils des allergènes ?",
     answer:
-      "Oui — les brownies contiennent du gluten, des œufs, du lait et des fruits à coque. Ils sont fabriqués dans un atelier qui utilise également des arachides et du soja. La liste complète est affichée sur chaque fiche produit.",
+      "Oui — les brownies contiennent du gluten, des œufs, du lait et des fruits à coque. Fabriqués dans un atelier qui utilise également des arachides et du soja. La liste complète est disponible sur chaque fiche produit.",
   },
   {
-    question: "Est-ce que je peux commander plusieurs boxes à la fois ?",
+    question: "Est-ce que je peux commander pour plusieurs personnes ?",
     answer:
-      "Pour des commandes multiples (équipes, entreprises), contactez-nous directement via la page Entreprises. Nous gérons les commandes groupées avec un sleeve personnalisé à vos couleurs si vous le souhaitez.",
+      "Pour des commandes groupées — équipes, entreprises — contacte-nous via la page Entreprises. On gère les commandes en volume avec la même attention.",
   },
 ];
 
 const ENGAGEMENTS = [
   {
-    icon: "🇧🇪",
     titre: "100% artisanal belge",
-    description: "Préparés à la main en Belgique, avec des ingrédients sourcés localement.",
+    description: "Préparés à la main en Belgique, avec des ingrédients soigneusement choisis.",
   },
   {
-    icon: "📦",
-    titre: "Emballage boîte aux lettres",
-    description: "Format conçu pour rentrer dans toute boîte aux lettres belge standard.",
+    titre: "Livraison soignée",
+    description: "Emballé avec attention, expédié par bpost, livré directement chez le destinataire.",
   },
   {
-    icon: "✉️",
-    titre: "Message imprimé sur le sleeve",
-    description: "Votre mot est intégré au packaging — pas de carte perdue ou oubliée.",
+    titre: "Un message qui accompagne",
+    description: "Tu écris librement. Ton message fait partie du geste — pas une carte perdue.",
   },
   {
-    icon: "🔒",
     titre: "Paiement sécurisé",
-    description: "Paiement via Mollie — Bancontact, carte bancaire, virement.",
+    description: "Via Mollie — Bancontact, carte bancaire, virement SEPA.",
   },
 ];
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function CommentCaMarchePage() {
   return (
     <>
       {/* Hero */}
       <section
-        className="w-full py-16 md:py-24"
-        style={{ backgroundColor: "var(--primary-50)" }}
+        style={{ backgroundColor: "var(--bleu)", paddingTop: "80px", paddingBottom: "80px" }}
         aria-labelledby="ccm-heading"
       >
-        <div className="max-w-[48rem] mx-auto px-6 text-center">
-          <span
-            className="inline-block text-xs uppercase tracking-widest px-3 py-1 rounded-full mb-4"
+        <div className="mx-auto px-6 text-center" style={{ maxWidth: "640px" }}>
+          <p
             style={{
-              fontFamily: "var(--font-label)",
-              backgroundColor: "var(--primary-100)",
-              color: "var(--primary-700)",
+              fontFamily: "var(--font-body)",
+              fontSize: "12px",
+              fontWeight: 500,
+              fontStyle: "italic",
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              color: "var(--dark)",
+              opacity: 0.45,
+              marginBottom: "20px",
             }}
           >
-            Simple comme bonjour
-          </span>
+            En trois minutes
+          </p>
           <h1
             id="ccm-heading"
-            className="text-4xl md:text-5xl font-black leading-tight mb-4"
-            style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(2.4rem, 5vw, 4rem)",
+              fontWeight: 700,
+              color: "var(--dark)",
+              lineHeight: 1.08,
+              marginBottom: "24px",
+            }}
           >
-            Offrir une brownie box en 3 étapes
+            On s&apos;occupe<br />du reste.
           </h1>
           <p
-            className="text-lg md:text-xl max-w-[36rem] mx-auto"
-            style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)", lineHeight: 1.6 }}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "17px",
+              fontWeight: 300,
+              lineHeight: 1.75,
+              color: "var(--dark)",
+              opacity: 0.65,
+            }}
           >
-            Pas de déplacement, pas d'emballage à gérer, pas de carte à ne pas oublier.
-            Juste un cadeau qui arrive directement chez le destinataire.
+            Tu penses à quelqu&apos;un. Tu choisis le moment, tu écris quelques mots.
+            On prépare, on emballe, on livre — directement chez eux.
           </p>
         </div>
       </section>
 
       {/* Étapes */}
       <section
-        className="w-full py-16 md:py-24"
-        style={{ backgroundColor: "var(--bg-primary)" }}
+        style={{ backgroundColor: "var(--bg-primary)", paddingTop: "80px", paddingBottom: "88px" }}
         aria-labelledby="etapes-heading"
       >
-        <div className="max-w-[56rem] mx-auto px-6">
-          <h2 id="etapes-heading" className="sr-only">
-            Les 3 étapes pour commander
-          </h2>
+        <div className="mx-auto px-6" style={{ maxWidth: "56rem" }}>
+          <h2 id="etapes-heading" className="sr-only">Les 3 étapes</h2>
 
-          <ol className="flex flex-col gap-0" role="list">
+          <ol style={{ display: "flex", flexDirection: "column" }} role="list">
             {STEPS.map((step, i) => (
-              <li key={step.num} className="flex gap-6 md:gap-10">
-                {/* Ligne verticale + numéro */}
-                <div className="flex flex-col items-center">
+              <li key={step.num} style={{ display: "flex", gap: "40px" }}>
+                {/* Numéro + ligne verticale */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                   <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-black shrink-0"
                     style={{
-                      backgroundColor: "var(--primary-500)",
-                      color: "white",
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--dark)",
+                      color: "var(--chantilly)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       fontFamily: "var(--font-display)",
+                      fontSize: "18px",
+                      fontWeight: 700,
+                      flexShrink: 0,
                     }}
-                    aria-hidden
+                    aria-hidden="true"
                   >
                     {step.num}
                   </div>
                   {i < STEPS.length - 1 && (
                     <div
-                      className="w-0.5 flex-1 my-2"
-                      style={{ backgroundColor: "var(--primary-100)", minHeight: "48px" }}
-                      aria-hidden
+                      style={{
+                        width: "1px",
+                        flex: 1,
+                        margin: "8px 0",
+                        backgroundColor: "var(--dark)",
+                        opacity: 0.12,
+                        minHeight: "48px",
+                      }}
+                      aria-hidden="true"
                     />
                   )}
                 </div>
 
                 {/* Contenu */}
-                <div className="pb-10 pt-1 flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-2xl" aria-hidden>
-                      {step.icon}
-                    </span>
-                    <h3
-                      className="text-xl md:text-2xl font-black"
-                      style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
-                    >
-                      {step.titre}
-                    </h3>
-                  </div>
+                <div style={{ paddingBottom: "48px", paddingTop: "4px", flex: 1 }}>
+                  <h3
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "22px",
+                      fontWeight: 700,
+                      color: "var(--dark)",
+                      lineHeight: 1.2,
+                      marginBottom: "12px",
+                    }}
+                  >
+                    {step.titre}
+                  </h3>
                   <p
-                    className="text-base leading-relaxed max-w-[32rem]"
-                    style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "16px",
+                      fontWeight: 300,
+                      lineHeight: 1.75,
+                      color: "var(--dark)",
+                      opacity: 0.65,
+                      maxWidth: "32rem",
+                    }}
                   >
                     {step.description}
                   </p>
@@ -193,100 +212,135 @@ export default function CommentCaMarchePage() {
             ))}
           </ol>
 
-          {/* CTA */}
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Link
-              href="/offrir/anniversaire"
-              className="inline-flex items-center px-8 py-4 rounded-full text-white font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-500)] focus-visible:ring-offset-2"
-              style={{ backgroundColor: "var(--primary-500)", fontFamily: "var(--font-body)" }}
-            >
-              Choisir une occasion
-            </Link>
-          </div>
+          <Link
+            href="/offrir/anniversaire"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              padding: "15px 44px",
+              borderRadius: "999px",
+              backgroundColor: "var(--dark)",
+              color: "var(--chantilly)",
+              fontFamily: "var(--font-body)",
+              fontSize: "14px",
+              fontWeight: 500,
+              textDecoration: "none",
+              letterSpacing: "0.02em",
+            }}
+            className="hover:opacity-75 transition-opacity"
+          >
+            Choisir le moment
+          </Link>
         </div>
       </section>
 
       {/* Engagements */}
       <section
-        className="w-full py-16 md:py-20"
-        style={{ backgroundColor: "var(--bg-secondary)" }}
+        style={{ backgroundColor: "var(--lime)", paddingTop: "72px", paddingBottom: "80px" }}
         aria-labelledby="engagements-heading"
       >
-        <div className="max-w-[56rem] mx-auto px-6">
+        <div className="mx-auto px-6" style={{ maxWidth: "72rem" }}>
           <h2
             id="engagements-heading"
-            className="text-2xl md:text-3xl font-black mb-10"
-            style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+              fontWeight: 700,
+              color: "var(--dark)",
+              lineHeight: 1.1,
+              marginBottom: "48px",
+            }}
           >
             Ce qu&apos;on s&apos;engage à faire
           </h2>
 
-          <ul
-            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
-            role="list"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {ENGAGEMENTS.map((e) => (
-              <li
+              <div
                 key={e.titre}
-                className="flex gap-4 rounded-2xl p-5"
-                style={{ backgroundColor: "white", border: "1px solid var(--primary-100)" }}
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: "20px",
+                  padding: "28px",
+                  border: "1px solid rgba(30,27,46,0.07)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
               >
-                <span className="text-2xl shrink-0 mt-0.5" aria-hidden>
-                  {e.icon}
-                </span>
-                <div>
-                  <h3
-                    className="text-base font-bold mb-1"
-                    style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
-                  >
-                    {e.titre}
-                  </h3>
-                  <p
-                    className="text-sm leading-relaxed"
-                    style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
-                  >
-                    {e.description}
-                  </p>
-                </div>
-              </li>
+                <h3
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "15px",
+                    fontWeight: 600,
+                    color: "var(--dark)",
+                  }}
+                >
+                  {e.titre}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "14px",
+                    fontWeight: 300,
+                    lineHeight: 1.7,
+                    color: "var(--dark)",
+                    opacity: 0.65,
+                  }}
+                >
+                  {e.description}
+                </p>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
 
       {/* FAQ */}
       <section
-        className="w-full py-16 md:py-24"
-        style={{ backgroundColor: "var(--bg-primary)" }}
+        style={{ backgroundColor: "var(--bg-primary)", paddingTop: "72px", paddingBottom: "80px" }}
         aria-labelledby="faq-heading"
       >
-        <div className="max-w-[48rem] mx-auto px-6">
+        <div className="mx-auto px-6" style={{ maxWidth: "680px" }}>
           <h2
             id="faq-heading"
-            className="text-2xl md:text-3xl font-black mb-10"
-            style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(1.6rem, 2.5vw, 2.2rem)",
+              fontWeight: 700,
+              color: "var(--dark)",
+              lineHeight: 1.1,
+              marginBottom: "40px",
+            }}
           >
             Questions fréquentes
           </h2>
 
-          <dl className="flex flex-col gap-6">
-            {FAQS.map((faq) => (
-              <div
-                key={faq.question}
-                className="rounded-2xl p-5"
-                style={{ backgroundColor: "var(--bg-secondary)", border: "1px solid var(--primary-100)" }}
-              >
+          <dl style={{ display: "flex", flexDirection: "column", gap: "36px" }}>
+            {FAQS.map(({ question, answer }) => (
+              <div key={question} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <dt
-                  className="text-base font-bold mb-2"
-                  style={{ fontFamily: "var(--font-display)", color: "var(--text-primary)" }}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "var(--dark)",
+                  }}
                 >
-                  {faq.question}
+                  {question}
                 </dt>
                 <dd
-                  className="text-sm leading-relaxed"
-                  style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "15px",
+                    fontWeight: 300,
+                    lineHeight: 1.7,
+                    color: "var(--dark)",
+                    opacity: 0.65,
+                    margin: 0,
+                  }}
                 >
-                  {faq.answer}
+                  {answer}
                 </dd>
               </div>
             ))}
@@ -294,32 +348,56 @@ export default function CommentCaMarchePage() {
         </div>
       </section>
 
-      {/* CTA final — dark */}
+      {/* CTA final */}
       <section
-        className="w-full py-16 md:py-20"
-        style={{ backgroundColor: "var(--dark)" }}
+        style={{ backgroundColor: "var(--dark)", paddingTop: "80px", paddingBottom: "88px" }}
         aria-labelledby="cta-final-heading"
       >
-        <div className="max-w-[48rem] mx-auto px-6 text-center">
+        <div className="mx-auto px-6 text-center" style={{ maxWidth: "560px" }}>
           <h2
             id="cta-final-heading"
-            className="text-3xl md:text-4xl font-black mb-4"
-            style={{ fontFamily: "var(--font-display)", color: "white" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(2rem, 4vw, 3.2rem)",
+              fontWeight: 700,
+              color: "white",
+              lineHeight: 1.1,
+              marginBottom: "20px",
+            }}
           >
-            Prêt à faire plaisir ?
+            Tu as quelqu&apos;un en tête ?
           </h2>
           <p
-            className="text-base mb-8 max-w-[28rem] mx-auto"
-            style={{ fontFamily: "var(--font-body)", color: "#e8e8e8", lineHeight: 1.6 }}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "16px",
+              fontWeight: 300,
+              lineHeight: 1.7,
+              color: "white",
+              opacity: 0.6,
+              marginBottom: "44px",
+            }}
           >
-            Choisissez l&apos;occasion, écrivez votre message, et laissez-nous livrer la douceur.
+            C&apos;est déjà assez.<br />
+            On s&apos;occupe du reste.
           </p>
           <Link
             href="/offrir/anniversaire"
-            className="inline-flex items-center px-8 py-4 rounded-full text-[var(--dark)] font-semibold text-base transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--dark)]"
-            style={{ backgroundColor: "var(--primary-500)", color: "white", fontFamily: "var(--font-body)" }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              padding: "15px 44px",
+              borderRadius: "999px",
+              backgroundColor: "var(--cantaloupe)",
+              color: "var(--dark)",
+              fontFamily: "var(--font-body)",
+              fontSize: "14px",
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+            className="hover:opacity-80 transition-opacity"
           >
-            Choisir une occasion
+            Choisir le moment
           </Link>
         </div>
       </section>
