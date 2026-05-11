@@ -24,7 +24,7 @@
 #   - done: Retrospective has been completed
 
 generated: "2026-04-15"
-last_updated: "2026-05-04"
+last_updated: "2026-05-11"
 project: "MIMOS (La Brownie Box Belge)"
 project_key: NOKEY
 tracking_system: file-system
@@ -82,12 +82,12 @@ development_status:
   epic-6-retrospective: optional
 
   # ── Epic 7 : Dashboard Admin ──────────────────────────────────────────────
-  epic-7: in-progress
+  epic-7: done
   7-1-authentification-admin-protection-des-routes: done
   7-2-gestion-des-commandes-changement-de-statut: done
   7-3-gestion-des-produits-stocks: done
   7-4-gestion-des-codes-promo: done
-  7-5-gestion-rgpd-anonymisation: backlog
+  7-5-gestion-rgpd-anonymisation: done
   7-6-tableau-de-bord-metriques-operationnelles: done
-  7-7-parametres-admin-canal-de-notification: review
+  7-7-parametres-admin-canal-de-notification: done
   epic-7-retrospective: optional
