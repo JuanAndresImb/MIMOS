@@ -8,7 +8,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # MIMOS — Project Context for AI Agents
 
-> Last updated: 2026-05-04
+> Last updated: 2026-05-11
 
 ## 1. Project Identity
 
@@ -63,7 +63,10 @@ src/app/
 │       ├── commandes/            # Order management
 │       ├── produits/             # Product/stock management
 │       ├── codes-promo/          # Promo code management
-│       └── metriques/            # Dashboard metrics
+│       ├── metriques/            # Dashboard metrics
+│       ├── rgpd/                 # RGPD anonymisation manuelle
+│       ├── parametres/           # Webhook settings
+│       └── factures/             # CSV export factures (GET /api/admin/export/factures)
 │
 └── api/
     ├── webhooks/mollie/          # Payment webhook → creates recipient_pages
@@ -82,43 +85,49 @@ src/app/
 ### 4.1 CSS Custom Properties (globals.css)
 
 ```css
-/* Typography */
---font-display: Fraunces        /* Headlines, emotional impact */
---font-body: Plus Jakarta Sans  /* Body, labels, UI */
---font-label: var(--font-body)
+/* Typography — injected by next/font via layout.tsx */
+--font-display: P22 Mackinac Pro   /* H1, titres émotionnels, cartes message */
+--font-body:    Outfit              /* Body, labels, boutons, eyebrows */
+--font-label:   Caveat              /* via var(--font-handwriting) — accents décoratifs */
 
-/* Brand palette */
---primary-500: #E8A87C          /* Caramel tendre */
---primary-700: darker caramel
---bg-primary: #FAF3E0           /* Crème */
---bg-secondary: #FFF8F0         /* Off-white warm */
---text-primary: #41393E         /* Chocolat */
---text-secondary: muted dark
---chantilly: #FFF5F0            /* Card backgrounds */
---lime: #F5FAE8                 /* Reassurance section bg */
---dark: #41393E
+/* Palette MIMOS — pastels doux */
+--chantilly:  #FFFDFE   /* Branco — fond global et cards */
+--cantaloupe: #FFD8DD   /* Strawberry Blonde */
+--haze:       #CFC7FA   /* Lilás */
+--lime:       #FBF6BC   /* Jasmine — sections réassurance */
+--lavande:    #CFC7FA   /* festif bg */
+--saumon:     #F8B6A8   /* affectueux bg */
+--menthe:     #A5E7CB   /* pro bg */
+
+/* Sémantiques */
+--primary-500: #6D65B0  /* lilas (WCAG AA 4.65:1 sur blanc) */
+--primary-700: #5550A0  /* hover */
+--bg-primary:  var(--chantilly) = #FFFDFE
+--bg-secondary: var(--haze) = #CFC7FA
+--text-primary: #1a1a1a
+--dark:         #1E1B2E  /* indigo sombre — couleur principale texte/fonds */
 ```
 
-### 4.2 Occasion Tokens (src/data/occasions.ts)
+### 4.2 Système Sleeve — Occasions (src/data/occasions.ts)
 
-Each occasion has `sleeveTokens: { bg, accent, dark }` used across all occasion-specific UIs:
+Les `sleeveTokens: { bg, accent, dark }` sont définis par **type de sleeve**, pas par occasion.
+Les 5 occasions actives se répartissent ainsi :
 
-| Occasion | bg | accent |
-|----------|----|--------|
-| `noel-fetes` | `#FFF0F3` (blush rose) | `#D64F6E` (rouge festif) |
-| `anniversaire` | `#FFF3E0` (pêche dorée) | `#E8682A` (orange chaleureux) |
-| `saint-valentin` | `#FFF0F3` (blush rose) | `#D64F6E` (rouge intense) |
-| `naissance-bebe` | `#F0F8FF` (bleu ciel) | `#4A90D9` (bleu doux) |
-| `remerciements` | `#F0FAF5` (menthe claire) | `#2D9E6B` (vert confiance) |
-| `festif` (legacy) | lavande `#CFC7FA` | `#6D65B0` |
-| `affectueux` (legacy) | saumon `#F8B6A8` | `#C07868` |
-| `pro` (legacy) | menthe `#A5E7CB` | `#3D9A72` |
+| Sleeve type | Occasions | bg | accent | dark |
+|---|---|---|---|---|
+| `festif` | `anniversaire`, `noel-fetes` | `#CFC7FA` (lavande) | `#6D65B0` | `#3D3880` |
+| `affectueux` | `surprise`, `collegue` | `#F8B6A8` (saumon) | `#C07868` | `#7A4535` |
+| `pro` | `entreprise` | `#A5E7CB` (menthe) | `#3D9A72` | `#2D6B50` |
+
+Les tokens sont exposés via `SLEEVE_TOKENS` et résolus en CSS vars (`var(--sleeve-festif-bg)`, etc.).
+**Ne jamais hardcoder ces hex** — toujours lire depuis `occasion.sleeveTokens.*`.
 
 ### 4.3 Typography Conventions
-- `var(--font-display)` = Fraunces → H1, emotional quotes, hero text
-- `var(--font-body)` = Plus Jakarta Sans → body, labels, buttons, eyebrows
+- `var(--font-display)` = P22 Mackinac Pro → H1, titres émotionnels, carte message
+- `var(--font-body)` = Outfit → body, labels, boutons, eyebrows
+- `var(--font-label)` = Caveat → accents décoratifs uniquement
 - Eyebrow style: `font-size: 12px; font-weight: 500; font-style: italic; text-transform: uppercase; letter-spacing: 0.15em`
-- Ghost/outline text: `webkit-text-stroke: 2px [color]; color: transparent` (used in DestinataireImmersif parallax)
+- Ghost/outline text: `WebkitTextStroke: 1.5px [color]; color: transparent` (DestinataireImmersif parallax)
 
 ---
 
@@ -139,7 +148,7 @@ src/lib/utils.ts                # formatPriceCents(), etc.
 src/app/(public)/commander/page.tsx         # Entry: resolves occasion + product, passes to TunnelClient
 src/app/(public)/commander/TunnelClient.tsx # Multi-step form (Zustand): message → address → review → pay
 src/store/tunnelStore.ts                    # Zustand store for checkout state
-src/actions/order.ts                        # Server Actions: createOrder, etc.
+src/actions/orders.ts                       # Server Actions: createOrder, validatePromoCode
 src/actions/admin.ts                        # Server Actions: updateOrderStatus (ships → tracking email)
 src/actions/emails.ts                       # sendShippingNotificationEmail, sendOrderConfirmation
 ```
@@ -167,7 +176,7 @@ src/emails/ShippingNotification.tsx    # Header vert bpost, CTA "Suivre mon coli
 ## 6. Database Schema (key tables)
 
 ```sql
-orders               -- Main order table (status: pending|paid|shipped|delivered|cancelled)
+orders               -- Main order table (status: pending|paid|preparing|shipped|delivered|cancelled)
 recipient_pages      -- One per order: token, message, promo_code_id, first_viewed_at, anonymized_at
 promo_codes          -- type: 'recipient' (10% off for gift recipient), 'manual'
 products             -- name, price_cents, stock, is_active
@@ -205,7 +214,7 @@ Full-screen 3-section immersive experience (CSS + IntersectionObserver, no heavy
 - Background: `sleeveTokens.bg` (mirrors hero)
 - Ghost sender name centered (decorative)
 - Promo code card: `gift-stamp` CSS animation on enter
-- CTA button: dark bg (`var(--text-primary)`)
+- CTA button: dark bg (`tokens.dark`)
 - Soft "Retour à MIMOS" link
 
 ### Occasion Copy (`OCCASION_COPY` map)
@@ -284,16 +293,17 @@ Each occasion slug maps to `{ eyebrow, intro, ghost }` — personalized for the 
 
 See `sprint-status.yaml` for full epic/story tracking.
 
-**Current focus** (2026-05-04): Epic 5 (Notifications) — story 5-1 (bpost webhook) complete, story 5-2 (customer account post-purchase) backlog.
+**Current focus** (2026-05-11): Epic 5 (Notifications) — story 5-2 (compte client post-achat) en backlog, pas encore de story file.
 
-**Recently completed** (this session, 2026-05-04):
-- DestinataireImmersif full rebuild (3-section, scroll animations, glassmorphism X button)
-- Route group `(gift)` created → immersive layout without navbar/footer
-- Occasion pages redesigned (format cards with `sleeveTokens.accent`, `histoire` field)
-- Commander tunnel: occasion-specific bg, accent step indicators, emotional copy
-- All user-facing "sleeve" / "brownie" language removed from occasion pages + tunnel
-- GSAP installed (not yet wired — animations use CSS + IntersectionObserver)
-- 21st.dev Magic MCP added to Claude settings
+**Epics complétés :** 1 (Fondations), 2 (Catalogue), 3 (Tunnel), 4 (Destinataire), 7 (Admin dashboard)
+
+**Résumé des changements structurels majeurs :**
+- Route group `(gift)` → layout immersif sans navbar/footer (`/destinataire/[token]`)
+- `DestinataireImmersif` : 3 sections CSS (hero parallax, message card, promo CTA)
+- `occasions.ts` refactorisé : 5 slugs actifs, système 3 sleeves, champs `histoire` + `intention`
+- Tunnel d'achat : bg occasion-specific, `StepIndicator` avec `accent` prop
+- Admin Epic 7 complet : commandes, produits, codes-promo, métriques, RGPD, paramètres
+- GSAP installé mais non utilisé — animations via CSS keyframes + IntersectionObserver
 
 ---
 
