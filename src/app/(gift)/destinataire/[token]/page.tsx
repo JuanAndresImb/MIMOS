@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -61,13 +62,13 @@ export default async function DestinataireTokenPage({ params }: Props) {
         >
           Cette page a expiré conformément à notre politique de confidentialité.
         </p>
-        <a
+        <Link
           href="/"
           className="px-6 py-3 rounded-full text-white text-sm font-semibold"
           style={{ backgroundColor: "var(--primary-500)", fontFamily: "var(--font-body)" }}
         >
           Retour à l&apos;accueil
-        </a>
+        </Link>
       </main>
     );
   }

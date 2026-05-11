@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect, useRef } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { z } from "zod";
@@ -884,7 +884,7 @@ export default function TunnelClient({ product, occasion, initialPromoCode }: Pr
   // Clé d'idempotence stable pour toute la durée de vie du composant.
   // Générée une seule fois au montage — plusieurs clics sur "Payer" utilisent la même clé,
   // ce qui empêche la création de doublons sans bloquer les vraies nouvelles commandes.
-  const idempotencyKeyRef = useRef<string>(crypto.randomUUID());
+  const [idempotencyKey] = useState<string>(() => crypto.randomUUID());
 
   return (
     <div>
@@ -953,7 +953,7 @@ export default function TunnelClient({ product, occasion, initialPromoCode }: Pr
             b2bData={b2bData}
             onBack={() => setStep(2)}
             initialPromoCode={initialPromoCode}
-            idempotencyKey={idempotencyKeyRef.current}
+            idempotencyKey={idempotencyKey}
           />
         )}
       </div>

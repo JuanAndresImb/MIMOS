@@ -21,7 +21,7 @@ export async function GET(req: Request) {
 
   const supabase = createAdminClient();
 
-  let query = supabase
+  const query = supabase
     .from("orders")
     .select(`
       id,

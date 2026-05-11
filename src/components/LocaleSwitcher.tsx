@@ -14,6 +14,7 @@ export default function LocaleSwitcher() {
   function switchLocale(next: string) {
     if (next === locale) return;
     // Stocke la locale en cookie (1 an)
+    // eslint-disable-next-line react-hooks/immutability
     document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; SameSite=Lax`;
     router.refresh();
   }

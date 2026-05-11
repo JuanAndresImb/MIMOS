@@ -12,6 +12,7 @@ export default function HeroBanner() {
     if (!el) return;
     // Déjà visible au montage (ex: scroll rapide) → afficher immédiatement
     const rect = el.getBoundingClientRect();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (rect.top < window.innerHeight) { setVisible(true); return; }
     const observer = new IntersectionObserver(
       ([entry]) => {
