@@ -8,7 +8,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # MIMOS — Project Context for AI Agents
 
-> Last updated: 2026-05-11
+> Last updated: 2026-05-29
 
 ## 1. Project Identity
 
@@ -19,7 +19,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | Repo | `brownie-box-belge` (historical name, keep as-is) |
 | Package manager | **pnpm** (never use npm or yarn) |
 | Dev server | `pnpm dev` → `http://localhost:3000` |
-| Local DB | Supabase Docker → `http://127.0.0.1:54321` (start with `npx supabase start`) |
+| DB dev | **Supabase Cloud** `xonliijpkalycvozzqob` — EU West (Ireland) — **pas de Docker** |
+| DB prod | Supabase Cloud `zfigulucdisedfntcfba` — São Paulo (à migrer EU avant launch) |
 
 ---
 
