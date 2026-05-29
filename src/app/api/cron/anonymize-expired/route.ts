@@ -51,9 +51,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  // Invalider le cache Vercel pour chaque page destinataire
-  for (const page of expired) {
-    revalidatePath(`/destinataire/[token]`);
+  // Invalider le cache Vercel pour chaque token anonymisé
+  for (const { token } of expired) {
+    revalidatePath(`/destinataire/${token}`);
   }
 
   console.info(`[cron/anonymize-expired] anonymized ${ids.length} pages`);

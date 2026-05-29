@@ -21,7 +21,6 @@ export interface ShippingNotificationProps {
   trackingUrl: string;
 }
 
-const primary = "#ff6b6b";
 const dark    = "#1a1a1a";
 const muted   = "#6c757d";
 const bg      = "#f8f9fa";

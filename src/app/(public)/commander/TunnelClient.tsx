@@ -565,7 +565,6 @@ function StepPaiement({
   const [promoInput, setPromoInput] = useState("");
   const [promoError, setPromoError] = useState("");
   const [promoDiscount, setPromoDiscount] = useState(0);
-  const [promoCodeId, setPromoCodeId] = useState<string | null>(null);
   const [promoApplied, setPromoApplied] = useState("");
   const [isValidating, startValidation] = useTransition();
 
@@ -576,7 +575,6 @@ function StepPaiement({
       const result = await validatePromoCode(initialPromoCode.trim());
       if (result.valid) {
         setPromoDiscount(result.discountCents);
-        setPromoCodeId(result.promoCodeId);
         setPromoApplied(initialPromoCode.trim().toUpperCase());
       }
     });
@@ -594,13 +592,11 @@ function StepPaiement({
       const result = await validatePromoCode(promoInput.trim());
       if (result.valid) {
         setPromoDiscount(result.discountCents);
-        setPromoCodeId(result.promoCodeId);
         setPromoApplied(promoInput.trim().toUpperCase());
         setPromoInput("");
       } else {
         setPromoError(result.error);
         setPromoDiscount(0);
-        setPromoCodeId(null);
         setPromoApplied("");
       }
     });

@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Deno edge functions — linted par Deno, pas par Next.js ESLint
+    "supabase/functions/**",
+    // Worktrees et sessions Claude Code — jamais à linter
+    ".claude/**",
   ]),
 ]);
 

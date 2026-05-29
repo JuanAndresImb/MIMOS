@@ -21,8 +21,7 @@ export default function BrandStory() {
                 fontStyle: "italic",
                 textTransform: "uppercase",
                 letterSpacing: "0.15em",
-                color: "var(--dark)",
-                opacity: 0.4,
+                color: "#57546A",
               }}
             >
               Pourquoi MIMOS existe

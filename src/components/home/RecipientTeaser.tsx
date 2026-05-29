@@ -18,8 +18,7 @@ export default function RecipientTeaser() {
             fontStyle: "italic",
             textTransform: "uppercase",
             letterSpacing: "0.15em",
-            color: "white",
-            opacity: 0.4,
+            color: "#BDBAC8",
             marginBottom: "20px",
           }}
         >

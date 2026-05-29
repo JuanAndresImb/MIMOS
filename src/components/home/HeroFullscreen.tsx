@@ -17,8 +17,7 @@ export default function HeroFullscreen() {
           fontSize: "13px",
           fontWeight: 300,
           fontStyle: "italic",
-          color: "var(--dark)",
-          opacity: 0.5,
+          color: "#57546A",
           marginBottom: "24px",
           letterSpacing: "0.01em",
         }}
