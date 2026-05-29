@@ -24,7 +24,7 @@
 #   - done: Retrospective has been completed
 
 generated: "2026-04-15"
-last_updated: "2026-05-11"
+last_updated: "2026-05-29"
 project: "MIMOS (La Brownie Box Belge)"
 project_key: NOKEY
 tracking_system: file-system
@@ -70,7 +70,7 @@ development_status:
   # ── Epic 5 : Notifications & Compte client ────────────────────────────────
   epic-5: in-progress
   5-1-webhook-bpost-notification-expedition: done
-  5-2-creation-compte-client-post-achat: backlog
+  5-2-creation-compte-client-post-achat: done
   5-3-espace-client-historique-adresses: backlog
   epic-5-retrospective: optional
 
