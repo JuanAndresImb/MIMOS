@@ -51,10 +51,6 @@ jobs:
     name: Accessibilité axe-core
     runs-on: ubuntu-latest
     needs: build
-    # Informatif — ne bloque pas le pipeline tant que les GitHub Secrets
-    # SUPABASE_URL / SUPABASE_ANON_KEY ne sont pas configurés.
-    # TODO : supprimer continue-on-error une fois les secrets ajoutés.
-    continue-on-error: true
 
     steps:
       - name: Checkout
