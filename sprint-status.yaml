@@ -68,17 +68,17 @@ development_status:
   epic-4-retrospective: optional
 
   # ── Epic 5 : Notifications & Compte client ────────────────────────────────
-  epic-5: in-progress
+  epic-5: done
   5-1-webhook-bpost-notification-expedition: done
   5-2-creation-compte-client-post-achat: done
-  5-3-espace-client-historique-adresses: backlog
+  5-3-espace-client-historique-adresses: done
   epic-5-retrospective: optional
 
   # ── Epic 6 : Parcours B2B & Facturation ───────────────────────────────────
-  epic-6: backlog
-  6-1-formulaire-de-commande-b2b: backlog
-  6-2-paiement-virement-sepa-confirmation-b2b: backlog
-  6-3-generation-automatique-facture-pdf-supabase-edge-function: backlog
+  epic-6: done
+  6-1-formulaire-de-commande-b2b: done
+  6-2-paiement-virement-sepa-confirmation-b2b: done
+  6-3-generation-automatique-facture-pdf-supabase-edge-function: done
   epic-6-retrospective: optional
 
   # ── Epic 7 : Dashboard Admin ──────────────────────────────────────────────
