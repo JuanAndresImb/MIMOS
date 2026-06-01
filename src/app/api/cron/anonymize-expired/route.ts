@@ -20,7 +20,7 @@ export async function GET(req: Request) {
   // Récupérer les pages expirées et non encore anonymisées
   const { data: expired, error } = await supabase
     .from("recipient_pages")
-    .select("id, order_id")
+    .select("id, order_id, token")
     .lt("expires_at", new Date().toISOString())
     .is("anonymized_at", null);
 
