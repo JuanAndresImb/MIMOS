@@ -9,10 +9,10 @@ on:
 env:
   # Supabase Cloud DEV — clés à ajouter dans GitHub Secrets :
   # github.com/JuanAndresImb/MIMOS/settings/secrets/actions
-  #   SUPABASE_URL      → https://xonliijpkalycvozzqob.supabase.co
-  #   SUPABASE_ANON_KEY → publishable key (sb_publishable_...)
-  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+  #   NEXT_PUBLIC_SUPABASE_URL      → https://xonliijpkalycvozzqob.supabase.co
+  #   NEXT_PUBLIC_SUPABASE_ANON_KEY → publishable key (sb_publishable_...)
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
   NEXT_PUBLIC_SENTRY_DSN: ''
 
 jobs:
@@ -80,8 +80,8 @@ jobs:
       - name: Run accessibility tests
         run: pnpm exec playwright test tests/a11y
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key' }}
           NEXT_PUBLIC_SENTRY_DSN: ''
 
       - name: Upload Playwright report
