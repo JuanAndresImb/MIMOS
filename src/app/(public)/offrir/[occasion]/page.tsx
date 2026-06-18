@@ -273,7 +273,7 @@ export default async function OccasionPage({ params }: Props) {
                     </p>
 
                     {/* CTA */}
-                    <div style={{ marginTop: "auto" }}>
+                    <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "10px" }}>
                       {product.stock <= 0 ? (
                         <p
                           style={{
@@ -315,6 +315,22 @@ export default async function OccasionPage({ params }: Props) {
                           Choisir ce format
                         </Link>
                       )}
+                      {/* Lien discret vers la fiche produit complète (allergènes, détails) */}
+                      <Link
+                        href={`/produits/${product.id}?occasion=${slug}`}
+                        style={{
+                          display: "block",
+                          textAlign: "center",
+                          fontFamily: "var(--font-body)",
+                          fontSize: "12px",
+                          color: "var(--text-secondary)",
+                          textDecoration: "none",
+                          opacity: 0.7,
+                        }}
+                        className="hover:opacity-100 transition-opacity"
+                      >
+                        Voir les détails & allergènes
+                      </Link>
                     </div>
                   </div>
                 );
