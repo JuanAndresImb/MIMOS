@@ -326,8 +326,9 @@ See `sprint-status.yaml` for full epic/story tracking.
 See `memory/project_production_checklist.md` for full list. Key items:
 - Remove `Bash(*)` from `settings.local.json`
 - Set Vercel env vars (Supabase prod URL/key, Mollie live key, CRON_SECRET, BPOST_WEBHOOK_SECRET, Resend key)
-- Run Supabase migrations against prod
+- Run **all** Supabase migrations against prod (`supabase db push`) — y compris `20260618000001_fix_rls_missing_tables.sql` (RLS, obligatoire)
 - Verify Mollie live mode
+- Vérifier domaine Resend (`mimos.be`) et mettre à jour `FROM_EMAIL` dans `src/lib/resend.ts`
 
 ---
 

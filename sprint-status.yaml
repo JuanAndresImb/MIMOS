@@ -24,11 +24,14 @@
 #   - done: Retrospective has been completed
 
 generated: "2026-04-15"
-last_updated: "2026-05-29"
+last_updated: "2026-06-18"
 project: "MIMOS (La Brownie Box Belge)"
 project_key: NOKEY
 tracking_system: file-system
 story_location: /Users/juanandres/brownie-box-belge
+# NOTE : Epics 1, 3, 7 + stories 2-1, 2-2 ont été implémentés avant l'adoption du workflow
+# de story-files. Ces stories sont marquées "done" dans le sprint-status mais n'ont pas de
+# fichier stories/*.md correspondant — la base de code est la source de vérité pour ces epics.
 
 development_status:
 
