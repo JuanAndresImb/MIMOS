@@ -7,6 +7,7 @@ import { logoutCustomer } from "@/actions/auth";
 import { formatPriceCents } from "@/lib/utils";
 import { getOccasion } from "@/data/occasions";
 import DeleteAccountForm from "./DeleteAccountForm";
+import ShippingTimeline from "./ShippingTimeline";
 
 export const metadata: Metadata = {
   title: "Mon compte — MIMOS",
@@ -47,6 +48,23 @@ export default async function ComptePage() {
     .order("created_at", { ascending: false });
 
   const displayOrders = orders ?? [];
+
+  // 4. Récupérer l'historique des événements bpost pour les commandes expédiées
+  const trackedOrderIds = displayOrders.filter((o) => o.tracking_number).map((o) => o.id);
+  let eventsByOrderId = new Map<string, { event_code: string; occurred_at: string }[]>();
+  if (trackedOrderIds.length > 0) {
+    const { data: shippingEvents } = await admin
+      .from("shipping_events")
+      .select("order_id, event_code, occurred_at")
+      .in("order_id", trackedOrderIds);
+
+    eventsByOrderId = new Map();
+    for (const event of shippingEvents ?? []) {
+      const existing = eventsByOrderId.get(event.order_id) ?? [];
+      existing.push({ event_code: event.event_code, occurred_at: event.occurred_at });
+      eventsByOrderId.set(event.order_id, existing);
+    }
+  }
 
   return (
     <div
@@ -167,18 +185,24 @@ export default async function ComptePage() {
                     </span>
                   </div>
 
-                  {/* Lien de suivi bpost si expédiée */}
-                  {order.tracking_number && (
-                    <a
-                      href={`https://track.bpost.cloud/btr/web/#/search?itemCode=${order.tracking_number}&lang=fr`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold transition-opacity hover:opacity-80"
-                      style={{ color: "var(--primary-500)", fontFamily: "var(--font-body)" }}
-                    >
-                      Suivre mon colis bpost →
-                    </a>
-                  )}
+                  {/* Suivi de livraison natif si expédiée */}
+                  {order.tracking_number && (() => {
+                    const events = eventsByOrderId.get(order.id) ?? [];
+                    if (events.length > 0) {
+                      return <ShippingTimeline events={events} trackingNumber={order.tracking_number} />;
+                    }
+                    return (
+                      <a
+                        href={`https://track.bpost.cloud/btr/web/#/search?itemCode=${order.tracking_number}&lang=fr`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold transition-opacity hover:opacity-80"
+                        style={{ color: "var(--primary-500)", fontFamily: "var(--font-body)" }}
+                      >
+                        Suivre mon colis bpost →
+                      </a>
+                    );
+                  })()}
 
                   {/* Lien vers page de confirmation */}
                   <div className={order.tracking_number ? "mt-2" : ""}>

@@ -79,6 +79,14 @@ export default function CompteConnexionPage() {
               />
             </div>
 
+            <Link
+              href="/compte/mot-de-passe-oublie"
+              className="text-xs text-right -mt-2 hover:underline w-fit ml-auto"
+              style={{ fontFamily: "var(--font-body)", color: "var(--text-secondary)" }}
+            >
+              Mot de passe oublié ?
+            </Link>
+
             {error && (
               <p
                 className="text-xs"

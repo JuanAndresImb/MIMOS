@@ -38,7 +38,12 @@ export async function proxy(request: NextRequest) {
   }
 
   // Compte auth
-  if (pathname.startsWith("/compte") && pathname !== "/compte/connexion") {
+  const PUBLIC_COMPTE_PATHS = new Set([
+    "/compte/connexion",
+    "/compte/mot-de-passe-oublie",
+    "/compte/reinitialiser-mot-de-passe",
+  ]);
+  if (pathname.startsWith("/compte") && !PUBLIC_COMPTE_PATHS.has(pathname)) {
     const response = NextResponse.next({ request: { headers: request.headers } });
     const { data: { user } } = await makeSupabaseClient(response).auth.getUser();
     if (!user) {

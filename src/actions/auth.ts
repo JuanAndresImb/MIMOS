@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendWelcomeEmail } from "@/actions/emails";
 
 export async function login(
   _prevState: string | null,
@@ -86,14 +87,21 @@ export async function signUpAfterPurchase(
   }
 
   // Lier le customer existant au nouveau compte Auth
-  await supabase
+  const { data: customer } = await supabase
     .from("customers")
     .update({
       user_id:           authData.user.id,
       marketing_consent: parsed.data.marketingConsent,
       updated_at:        new Date().toISOString(),
     })
-    .eq("email", parsed.data.email);
+    .eq("email", parsed.data.email)
+    .select("first_name")
+    .maybeSingle();
+
+  // Email de bienvenue — fire-and-forget, ne bloque jamais la création du compte
+  sendWelcomeEmail(parsed.data.email, customer?.first_name ?? "").catch((err) =>
+    console.error("[signUpAfterPurchase] échec envoi email de bienvenue:", err)
+  );
 
   return { success: true };
 }
@@ -114,6 +122,75 @@ export async function loginCustomer(
 
   revalidatePath("/compte", "layout");
   redirect("/compte");
+}
+
+// ─── Mot de passe oublié (espace client) ──────────────────────────────────────
+
+function getBaseUrl(): string {
+  return process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+}
+
+/**
+ * Envoie un email de réinitialisation de mot de passe via Supabase Auth.
+ * Toujours retourne "ok" — même si l'email n'existe pas — pour ne pas
+ * permettre l'énumération des comptes (sécurité).
+ */
+export async function requestPasswordReset(
+  _prevState: "ok" | null,
+  formData: FormData
+): Promise<"ok"> {
+  const email = (formData.get("email") as string)?.toLowerCase().trim();
+
+  if (email) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${getBaseUrl()}/compte/reinitialiser-mot-de-passe`,
+    });
+    if (error) {
+      console.error("[requestPasswordReset] erreur Supabase Auth:", error);
+    }
+  }
+
+  // Réponse identique que l'email existe ou non — anti-énumération
+  return "ok";
+}
+
+export type UpdatePasswordResult =
+  | { success: true }
+  | { success: false; error: "WEAK_PASSWORD" | "SESSION_EXPIRED" | "UNKNOWN" };
+
+/**
+ * Met à jour le mot de passe — appelée depuis la page de réinitialisation,
+ * une fois la session de récupération établie via le lien reçu par email.
+ */
+export async function updatePassword(
+  _prevState: UpdatePasswordResult | null,
+  formData: FormData
+): Promise<UpdatePasswordResult> {
+  const password = formData.get("password") as string;
+
+  if (!password || password.length < 8) {
+    return { success: false, error: "WEAK_PASSWORD" };
+  }
+
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { success: false, error: "SESSION_EXPIRED" };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    if (error.message.toLowerCase().includes("password")) {
+      return { success: false, error: "WEAK_PASSWORD" };
+    }
+    console.error("[updatePassword] erreur Supabase Auth:", error);
+    return { success: false, error: "UNKNOWN" };
+  }
+
+  revalidatePath("/compte", "layout");
+  return { success: true };
 }
 
 // ─── Logout admin ─────────────────────────────────────────────────────────────

@@ -23,6 +23,22 @@ const BPOST_DELIVERY_EVENTS = new Set([
   "DELIVERED_AT_PICK_UP_POINT",
 ]);
 
+// Événements bpost qu'on garde pour la frise de suivi native dans /compte
+// (les autres événements techniques/bruit ne sont pas persistés)
+const TRACKED_EVENTS = new Set([
+  "SENT",
+  "COLLECTED",
+  "IN_TRANSIT",
+  "ARRIVED_AT_DEPOT",
+  "OUT_FOR_DELIVERY",
+  "DELIVERED",
+  "DELIVERED_AT_DOOR",
+  "DELIVERED_IN_MAILBOX",
+  "DELIVERED_AT_PICK_UP_POINT",
+  "AVAILABLE_AT_PICK_UP_POINT",
+  "DELIVERY_FAILED",
+]);
+
 interface BpostEvent {
   barcode?: string;
   reference?: string;
@@ -54,11 +70,6 @@ export async function POST(req: Request) {
 
   console.info(`[webhooks/bpost] event=${event} tracking=${trackingNumber}`);
 
-  if (!BPOST_DELIVERY_EVENTS.has(event)) {
-    return NextResponse.json({ received: true });
-  }
-
-  // Marquer la commande comme livrée
   const supabase = createAdminClient();
   const { data: order } = await supabase
     .from("orders")
@@ -71,6 +82,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true });
   }
 
+  // Persister l'événement pour la frise de suivi native dans /compte (idempotent)
+  if (TRACKED_EVENTS.has(event)) {
+    const occurredAt = payload.timestamp ? new Date(payload.timestamp) : new Date();
+    const { error: insertError } = await supabase
+      .from("shipping_events")
+      .upsert(
+        {
+          order_id: order.id,
+          tracking_number: trackingNumber,
+          event_code: event,
+          occurred_at: occurredAt.toISOString(),
+        },
+        { onConflict: "order_id,event_code,occurred_at", ignoreDuplicates: true }
+      );
+
+    if (insertError) {
+      console.error(`[webhooks/bpost] erreur persistance shipping_events:`, insertError);
+    }
+  }
+
+  if (!BPOST_DELIVERY_EVENTS.has(event)) {
+    return NextResponse.json({ received: true });
+  }
+
+  // Marquer la commande comme livrée
   if (order.status !== "delivered") {
     await supabase
       .from("orders")

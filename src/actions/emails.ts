@@ -6,6 +6,7 @@ import { formatPriceCents } from "@/lib/utils";
 import { getOccasion } from "@/data/occasions";
 import OrderConfirmation from "@/emails/OrderConfirmation";
 import ShippingNotification from "@/emails/ShippingNotification";
+import Welcome from "@/emails/Welcome";
 import { generateInvoicePdf, type InvoiceData } from "@/lib/pdf/generateInvoice";
 
 /**
@@ -152,6 +153,29 @@ export async function sendShippingNotificationEmail(
 
   if (error) {
     console.error("[sendShippingNotificationEmail] Resend error:", error);
+  }
+}
+
+/**
+ * Envoie l'email de bienvenue après création d'un compte client (post-achat).
+ * Fire-and-forget : une erreur d'envoi n'empêche jamais la création du compte.
+ */
+export async function sendWelcomeEmail(email: string, firstName: string): Promise<void> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  const resend = getResendClient();
+
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: email,
+    subject: "Bienvenue dans la famille MIMOS 🤍",
+    react: Welcome({
+      firstName: firstName || "vous",
+      accountUrl: `${baseUrl}/compte`,
+    }),
+  });
+
+  if (error) {
+    console.error("[sendWelcomeEmail] Resend error:", error);
   }
 }
 
