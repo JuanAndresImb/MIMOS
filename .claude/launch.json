@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mimos-dev",
+      "runtimeExecutable": "/Users/juanandres/.nvm/versions/node/v22.20.0/bin/npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/Users/juanandres/brownie-box-belge",
+      "port": 3000
+    }
+  ]
+}

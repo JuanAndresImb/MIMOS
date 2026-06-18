@@ -43,3 +43,7 @@ next-env.d.ts
 .claude/settings.local.json
 .claude/worktrees/
 .claude/projects/
+
+# temp / tooling
+.tmp_work/
+.vscode/

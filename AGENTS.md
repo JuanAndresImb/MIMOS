@@ -8,14 +8,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # MIMOS — Project Context for AI Agents
 
-> Last updated: 2026-05-29
+> Last updated: 2026-06-08
 
 ## 1. Project Identity
 
 | Field | Value |
 |-------|-------|
 | Brand name | **MIMOS** (formerly "La Brownie Box Belge") |
-| Concept | "3 clicks pour dire Je pense à toi" — gifting service for artisanal Belgian brownies sent with a personalised printed message |
+| Concept | **"Marque d'attention manifestée"** — les gens veulent montrer qu'ils pensent aux autres même si la vie va trop vite. MIMOS matérialise ce geste : "3 clicks pour dire Je pense à toi". Produit de départ : brownies artisanaux belges envoyés avec message personnalisé imprimé. Plateforme extensible à d'autres produits (brownies ou non). |
+| Storytelling | Images parlent d'elles-mêmes pour l'artisanal et les sleeves. Pas d'accent latino explicite. Pas de mascottes. Pas d'argument "belge" ou "artisanal" en copy — c'est visuel et implicite. Le fil conducteur est toujours l'**émotion du geste** et **l'expérience du destinataire**. |
 | Repo | `brownie-box-belge` (historical name, keep as-is) |
 | Package manager | **pnpm** (never use npm or yarn) |
 | Dev server | `pnpm dev` → `http://localhost:3000` |
@@ -294,9 +295,21 @@ Each occasion slug maps to `{ eyebrow, intro, ghost }` — personalized for the 
 
 See `sprint-status.yaml` for full epic/story tracking.
 
-**Current focus** (2026-05-11): Epic 5 (Notifications) — story 5-2 (compte client post-achat) en backlog, pas encore de story file.
+**Current focus** (2026-06-09): Refonte page d'accueil livrée (story 2-3). Nouvelles features post-MVP — tracking bpost natif, reset password, email bienvenue (done).
 
-**Epics complétés :** 1 (Fondations), 2 (Catalogue), 3 (Tunnel), 4 (Destinataire), 7 (Admin dashboard)
+**Epics complétés :** 1 (Fondations), 2 (Catalogue), 3 (Tunnel), 4 (Destinataire), 5 (Notifications), 6 (B2B), 7 (Admin dashboard)
+
+**Features livrées hors epic (2026-06-08) :**
+- Tracking bpost natif dans `/compte` : table `shipping_events`, webhook updated, `ShippingTimeline.tsx`
+- Reset password : `/compte/mot-de-passe-oublie` + `/compte/reinitialiser-mot-de-passe`
+- Email de bienvenue : `Welcome.tsx` template, `sendWelcomeEmail()`, hooké dans `signUpAfterPurchase`
+
+**Refonte page d'accueil (2026-06-09) — story `2-3-page-daccueil-hero-sections-principales` :**
+- Les 6 sections de `/` réécrites en appliquant les éléments taste-skill (asymétrie, motion, haptic depth) : `HeroFullscreen`, `TrustStrip`, `OccasionsCarousel`, `BrandStory`, `ProductCarousel`, `RecipientTeaser`
+- Nouveau composant réutilisable `src/components/ui/Reveal.tsx` (scroll-reveal IntersectionObserver, props `delay`/`distance`/`threshold`)
+- `ProductCarousel` désormais Server Component async branché sur `getAllActiveProducts()` (vrais produits/prix DB), délègue l'UI scroll à `ProductCarouselTrack` (Client Component)
+- `RecipientTeaser` déplacé de `--dark` (section isolée) vers `--bleu` — plus de section sombre isolée sur la home
+- Keyframes hero (`mimosFadeUp`, `mimosFloat*`) ajoutées dans `globals.css`, hero reste un Server Component (stagger 100% CSS)
 
 **Résumé des changements structurels majeurs :**
 - Route group `(gift)` → layout immersif sans navbar/footer (`/destinataire/[token]`)
@@ -315,3 +328,118 @@ See `memory/project_production_checklist.md` for full list. Key items:
 - Set Vercel env vars (Supabase prod URL/key, Mollie live key, CRON_SECRET, BPOST_WEBHOOK_SECRET, Resend key)
 - Run Supabase migrations against prod
 - Verify Mollie live mode
+
+---
+
+## 14. Frontend Design Standards — Taste-Skill (Anti-Slop Rules)
+
+> Skills installés dans `.agents/skills/` : `design-taste-frontend`, `redesign-existing-projects`, `full-output-enforcement`, `high-end-visual-design`, `minimalist-ui`
+> Source : https://github.com/Leonxlnx/taste-skill
+
+### 14.1 Design Read — toujours déclarer en premier
+
+Avant tout nouveau composant public, déclarer en une ligne :
+**"Reading this as: `<type de page>` for `<audience>`, with a `<vibe>` language, leaning toward `<aesthetic family>`."**
+
+**MIMOS Design Read par défaut :**
+> *"Reading this as: premium consumer gifting page for emotionally-driven buyers (25–45), with a warm editorial / soft-structuralism language, leaning toward Fraunces display + Outfit body, pastel palette, airy density, restrained motion."*
+
+### 14.2 Les 3 Dials MIMOS
+
+| Dial | Valeur | Signification |
+|------|--------|---------------|
+| `DESIGN_VARIANCE` | **6** | Asymétrie mesurée — pas symétrique, pas chaotique |
+| `MOTION_INTENSITY` | **4** | CSS keyframes + IntersectionObserver — pas de cinématique lourde |
+| `VISUAL_DENSITY` | **3** | Aéré, respirant — "art gallery airy" pour les pages produit/occasion |
+
+### 14.3 Patterns BANNIS sur MIMOS
+
+Ces éléments font échouer le design instantanément — ne jamais les produire :
+
+**Typographie :**
+- ❌ `Inter`, `Roboto`, `Arial`, `Open Sans` — MIMOS utilise `Fraunces` (display) + `Outfit` (body) + `Caveat` (accents déco uniquement)
+- ❌ Gros titres centrés génériques sans intention asymétrique
+- ❌ All-caps partout sans raison — préférer lowercase italic ou sentence case pour les eyebrows
+
+**Couleurs & surfaces :**
+- ❌ Gradients AI générique (purple/blue mesh) — MIMOS n'utilise que sa palette tokens (`--chantilly`, `--cantaloupe`, `--haze`, `--lime`, sleeves)
+- ❌ `box-shadow: 0 4px 12px rgba(0,0,0,0.15)` — shadows tintées selon l'arrière-plan ou quasi-absentes
+- ❌ Fonds noirs ou dark mode — MIMOS est une marque chaude/lumineuse
+- ❌ Sections dark isolées dans une page claire — incohérence visuelle
+
+**Layout :**
+- ❌ 3 colonnes égales de feature cards (layout AI-générique le plus fréquent)
+- ❌ Hero centré symétrique avec image à droite / texte à gauche banale
+- ❌ `height: 100vh` — toujours `min-height: 100svh` ou `100dvh`
+- ❌ Padding uniforme partout — varier `24px / 40px / 64px / 96px` selon la hiérarchie
+
+**Composants :**
+- ❌ Emojis dans les titres, headings, ou alt text — réserver aux contextes explicitement chaleureux (copy émotionnelle, labels)
+- ❌ Copy AI-cliché : "Elevate", "Seamless", "Unleash", "Next-Gen", "Délicieux", "Artisanal" (en titre)
+- ❌ Placeholder `Lorem ipsum` — contenu MIMOS réel ou contenu contextuel toujours
+- ❌ `// ...` ou `// reste du code` dans les blocs de code — output complet obligatoire (full-output-enforcement)
+
+### 14.4 Patterns RECOMMANDÉS pour MIMOS
+
+**Typographie :**
+- ✅ `Fraunces` pour les titres émotionnels (`font-display`) — tracking serré `-0.02em`, weight 700–900
+- ✅ `Outfit` pour tout le body/UI (`font-body`) — 400/500 pour le corps, 600 pour les labels actifs
+- ✅ Hiérarchie par **poids + couleur** plutôt que taille seule
+- ✅ `text-wrap: balance` sur les headlines pour éviter les orphelins
+
+**Couleurs :**
+- ✅ Toujours `var(--xxx)` — jamais de hex hardcodés
+- ✅ `occasion.sleeveTokens.accent` pour les CTAs, highlights, borders actives
+- ✅ `var(--chantilly)` (#FFFDFE) comme fond global — jamais blanc pur #FFFFFF ni noir
+- ✅ Shadows tintées : `box-shadow: 0 2px 16px 0 rgba(0,0,0,0.06)` — très légères
+
+**Layout :**
+- ✅ Asymétrie mesurée : grille 2 colonnes avec proportions inégales (60/40, 55/45)
+- ✅ Espacement large dans les sections produit/occasion — respiration émotionnelle
+- ✅ Double-bezel sur les cards produit : outer shell `p-1.5` + `rounded-[2rem]`, inner core `rounded-[calc(2rem-0.375rem)]`
+- ✅ Boutons CTA : `rounded-full`, padding généreux `px-8 py-4`, couleur sleeve accent
+
+**Narrative & Copy :**
+- ✅ Toujours répondre à "pour qui ?" et "quel moment on crée ?" — pas juste "qu'est-ce que c'est ?"
+- ✅ Mettre en avant **l'expérience du destinataire** et **le message personnalisé** — c'est le différenciateur MIMOS
+- ✅ Allergens et infos légales : présentés avec chaleur, pas en annexe réglementaire froide
+- ✅ CTA : "Composer ce MIMOS" / "Préparer ce geste" plutôt que "Commander" / "Choisir ce format"
+
+### 14.5 Audit obligatoire avant redesign
+
+Avant toute modification d'une page publique existante, scanner pour :
+1. Pattern générique AI présent (3-col equal grid, centered hero, Inter, generic shadows) ?
+2. Storytelling "attention manifestée" présent ou absent ?
+3. Expérience destinataire / message personnalisé évoqué ?
+4. Tokens CSS utilisés correctement (`var(--xxx)`, `sleeveTokens.*`) ?
+5. Dead code / composants orphelins à nettoyer en passant ?
+
+### 14.6 Fiche Produit — Décisions Architecture (2026-06-08)
+
+**Découverte :** `ProductCard.tsx` et `AllergensList.tsx` sont des composants **orphelins** — jamais importés sur une page publique. Les produits sont affichés en cards pricing inline sur `/offrir/[occasion]`.
+
+**Décision :** Construire une vraie page produit `/produits/[slug]` qui :
+- Réutilise et améliore `ProductCard` + `AllergensList`
+- Intègre le storytelling "attention manifestée" : moment créé, message personnalisé, expérience destinataire
+- Corrige le trou de conformité légale (allergènes EU 1169/2011 actuellement invisibles)
+- Reste product-agnostic (pas de références "brownies" hardcodées — `product.name` + `product.description`)
+- Apply les dials MIMOS : variance 6, density 3, motion 4
+
+### 14.7 Patterns réutilisables — Refonte page d'accueil (2026-06-09)
+
+**`Reveal` (`src/components/ui/Reveal.tsx`)** — wrapper scroll-reveal générique :
+- IntersectionObserver, `threshold` par défaut 0.12, anime `opacity` + `translateY(distance)` sur 0.65s `cubic-bezier(0.22,1,0.36,1)`
+- Props : `delay` (ms, pour stagger des colonnes/siblings), `distance` (px, défaut 32), `as`
+- Dégrade proprement si l'élément est déjà visible au mount (pas d'animation surprise sur petits écrans / fast scroll)
+- À privilégier pour tout nouveau scroll-reveal plutôt que de réécrire un `IntersectionObserver` inline (sauf besoin de deux refs/colonnes synchronisées comme `RecipientTeaser`, qui garde son implémentation locale)
+
+**Stagger hero en CSS pur** — pour animer l'entrée d'un hero **sans** `"use client"` :
+- Définir des `@keyframes` dans `globals.css` (`mimosFadeUp`, `mimosScaleIn`, `mimosFloat*`)
+- Classes `.hero-line` + `.hero-line-1..4` avec `animation-delay` croissants pour le stagger texte
+- Classes `.hero-card-front/mid/back` pour un flottement infini léger sur des éléments décoratifs (`aria-hidden="true"`)
+- Le composant hero reste un Server Component — la motion est entièrement déléguée au CSS
+
+**Split Server/Client pour les carrousels de données** — pattern à reproduire pour toute section qui (a) fetch depuis la DB et (b) a besoin d'interactivité scroll/JS :
+- Le composant exporté de la section est un **Server Component async** (`ProductCarousel.tsx`) qui fetch les données et les passe en props
+- Un composant `*Track.tsx` séparé (`"use client"`) reçoit les données en props et gère le scroll/hover
+- Le Client Component ne doit **jamais** importer depuis `@/lib/services/*` si ce module importe `@/lib/supabase/server` — redéfinir le type localement depuis `@/lib/supabase/database.types` et importer les helpers purs (ex. `formatPriceCents`) depuis `@/lib/utils`
