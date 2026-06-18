@@ -7,9 +7,9 @@ import ProductCarousel from "@/components/home/ProductCarousel";
 import RecipientTeaser from "@/components/home/RecipientTeaser";
 
 export const metadata: Metadata = {
-  title: "MIMOS — Des attentions artisanales belges",
+  title: "MIMOS — L'attention, manifestée",
   description:
-    "Envoie un brownie artisanal belge avec ton message, soigneusement emballé. Une attention sincère pour chaque occasion — livré directement chez eux.",
+    "Vous avez quelqu'un en tête. En quelques clics, ce geste est chez eux — avec vos mots. MIMOS : des attentions sincères pour chaque occasion.",
 };
 
 export default function HomePage() {

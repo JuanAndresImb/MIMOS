@@ -280,3 +280,45 @@ header[data-solid] {
 /* Scrollbar masquée (Chrome/Safari + Firefox) */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+/* ── Homepage keyframe animations (MOTION_INTENSITY 4) ─────────────────────── */
+@keyframes mimosFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes mimosScaleIn {
+  from { opacity: 0; transform: scale(0.93) translateY(12px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+@keyframes mimosFloat {
+  0%, 100% { transform: translateY(0) rotate(1.5deg); }
+  50%       { transform: translateY(-10px) rotate(2.5deg); }
+}
+@keyframes mimosFloatSlow {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%       { transform: translateY(-7px) rotate(-2deg); }
+}
+@keyframes mimosFloatSlower {
+  0%, 100% { transform: translateY(0) rotate(6deg); }
+  50%       { transform: translateY(-5px) rotate(5deg); }
+}
+
+/* Hero stagger — applied to individual elements, CSS-only (Server Component safe) */
+.hero-line {
+  animation: mimosFadeUp 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-line-1 { animation-delay: 0.04s; }
+.hero-line-2 { animation-delay: 0.18s; }
+.hero-line-3 { animation-delay: 0.34s; }
+.hero-line-4 { animation-delay: 0.52s; }
+
+/* Hero visual (right column cards) */
+.hero-card-front {
+  animation: mimosFloat 6s ease-in-out 0.6s infinite both;
+}
+.hero-card-mid {
+  animation: mimosFloatSlow 7s ease-in-out 0.3s infinite both;
+}
+.hero-card-back {
+  animation: mimosFloatSlower 8s ease-in-out 0.1s infinite both;
+}
